@@ -1,11 +1,16 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 
 <body>
-	hello world
+	<canvas id="canvas"></canvas>
+	<div id="remotePlayers">
+                <span id="remotePlayersTitle">Users Connected:</span>
+    </div>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/Player.js"></script>
 	<script src="/js/client.js"></script>
 </body>
 </html>

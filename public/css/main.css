@@ -1,0 +1,24 @@
+html{
+	font-family:verdana;
+}
+
+canvas{
+	float:left;
+	border:1px solid black;
+	background-color:green;
+}
+
+#remotePlayersTitle{
+	font-weight:bold;
+}
+
+#remotePlayers{
+	width:180px;
+	height:480px;
+	float:left;
+	padding:10px;
+	border:1px solid black;
+	border-left:none;
+	background-color:gray;
+	color:white;
+}
