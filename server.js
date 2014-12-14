@@ -48,6 +48,8 @@ function init(){
 	startingX = 0;
 	startingY = 0;
 	FPS = 60;
+	gravity = 0.3;
+	friction = 0.8;
 
 	//called for every new socket connection
 	io.sockets.on("connection", function(socket){
@@ -74,11 +76,27 @@ function gameLoop(socket){
 
 //update physics
 function updatePhysics(){
+	//calculate positions
+	for (var i = 0; i < players.length; i++){
+		//apply friction and gravity
+		players[i].setVelocityX(players[i].getVelocityX()*friction);
+		players[i].setVelocityY(players[i].getVelocityY()+gravity);
 
+		//set position
+		players[i].setX(players[i].getX() + players[i].getVelocityX());
+		players[i].setY(players[i].getY() + players[i].getVelocityY());
+
+		//check for ground collision
+		if (players[i].getY() >= 490){
+			players[i].setJumping(false);
+			players[i].setY(490);
+		}
+	}
 }
 
 //send updates to clients
 function sendGameState(socket){
+	//send new positions to clients
 	for (var i = 0; i < players.length; i++){
     	socket.emit('newPositionToClient',{
 			id: players[i].getId(),
@@ -121,6 +139,7 @@ function onClientDisconnect(){
 function onNewPlayerToServer(data){
 	console.log(this.id + " has set the username " + data.username);
 
+	//create new player object
 	var newPlayer = new Player(data.username, startingX, startingY, this.id);
 
 	//add new player to server list
@@ -148,35 +167,45 @@ function onNewPlayerToServer(data){
 
 //when left key is pressed
 function onLeftKeyToServer(){
-	var index = searchIndexById(this.id);
+	var i = searchIndexById(this.id);
 	//if id isn't found
-	if (index == -1){
+	if (i == -1){
 		console.log(this.id + ": id not found");
 		return;	
 	}
-	players[index].setX(players[index].getX()-2);
+	//calculate velocity
+	if (players[i].getVelocityX() > -players[i].getSpeed()){
+		players[i].setVelocityX(players[i].getVelocityX()-1);
+	}
 }
 
 //when right key is pressed
 function onRightKeyToServer(){
-	var index = searchIndexById(this.id);
+	var i = searchIndexById(this.id);
 	//if id isn't found
-	if (index == -1){
+	if (i == -1){
 		console.log(this.id + ": id not found");
 		return;	
 	}
-	players[index].setX(players[index].getX()+2);
+	//calculate velocity
+	if (players[i].getVelocityX() < players[i].getSpeed()){
+		players[i].setVelocityX(players[i].getVelocityX()+1);
+	}
 }
 
 //when up key is pressed
 function onUpKeyToServer(){
-	var index = searchIndexById(this.id);
+	var i = searchIndexById(this.id);
 	//if id isn't found
-	if (index == -1){
+	if (i == -1){
 		console.log(this.id + ": id not found");
 		return;	
 	}
-	players[index].setY(players[index].getY()-2);
+	//jumping logic
+	if (!players[i].getJumping()){
+		players[i].setJumping(true);
+		players[i].setVelocityY(-players[i].getSpeed()*2);
+	}
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/

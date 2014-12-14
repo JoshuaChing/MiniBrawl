@@ -4,6 +4,10 @@ var Player = function(startUsername,startX,startY,initID){
 	var x = startX;
 	var y = startY;
 	var id = initID;
+	var velocityX = 0;
+	var velocityY = 0;
+	var speed = 3;
+	var jumping = false;
 
 	//getters and setters
 	function getUsername(){
@@ -38,6 +42,38 @@ var Player = function(startUsername,startX,startY,initID){
 		id = newId;
 	}
 
+	function getVelocityX(){
+		return velocityX;
+	}
+
+	function setVelocityX(newVelocityX){
+		velocityX = newVelocityX;
+	}
+
+	function getVelocityY(){
+		return velocityY;
+	}
+
+	function setVelocityY(newVelocityY){
+		velocityY = newVelocityY;
+	}
+
+	function getSpeed(){
+		return speed;
+	}
+
+	function setSpeed(newSpeed){
+		speed = newSpeed;
+	}
+
+	function getJumping(){
+		return jumping;
+	}
+
+	function setJumping(state){
+		jumping = state;
+	}
+
 	return{
 		getUsername : getUsername,
 		setUsername : setUsername,
@@ -46,7 +82,15 @@ var Player = function(startUsername,startX,startY,initID){
 		getY : getY,
 		setY : setY,
 		getId : getId,
-		setId : setId
+		setId : setId,
+		getVelocityX : getVelocityX,
+		setVelocityX : setVelocityX,
+		getVelocityY : getVelocityY,
+		setVelocityY : setVelocityY,
+		getSpeed : getSpeed,
+		setSpeed : setSpeed,
+		getJumping : getJumping,
+		setJumping : setJumping
 	}
 
 };

@@ -167,6 +167,7 @@ function searchIndexById(id){
 //start game when window finishes loading
 window.addEventListener("load", function(){
   init();
+  update();
 });
 
 //key code event listener
