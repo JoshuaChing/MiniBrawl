@@ -24,7 +24,7 @@ io.configure(function () {
 
 //listen for web clients
 server.listen(port, function(){
-        console.log("listening on :"+port);
+    console.log("listening on :"+port);
 });
 
 
@@ -35,6 +35,9 @@ var Player = require("./game_modules/Player").Player;
 var players;
 var startingX;
 var startingY;
+var FPS;
+var gravity;
+var friciton;
 
 
 /********************************/
@@ -42,8 +45,10 @@ var startingY;
 /********************************/
 function init(){
 	players = [];
-	startingX = 400;
-	startingY = 400;
+	startingX = 0;
+	startingY = 0;
+	FPS = 60;
+
 	//called for every new socket connection
 	io.sockets.on("connection", function(socket){
 		onClientConnect(socket);
@@ -53,6 +58,30 @@ function init(){
 		socket.on ("rightKeyToServer",onRightKeyToServer);
 		socket.on ("upKeyToServer",onUpKeyToServer);
 	});
+
+	//start the game loop
+	setInterval(gameLoop,1000/FPS);
+}
+
+
+/********************************/
+/* GAME LOOP                    */
+/********************************/
+
+//main game loop
+function gameLoop(){
+	updatePhysics();
+	sendGameState();
+}
+
+//update physics
+function updatePhysics(){
+
+}
+
+//send updates to clients
+function sendGameState(){
+
 }
 
 

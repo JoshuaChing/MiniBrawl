@@ -36,7 +36,7 @@ function init(){
 
 	//game variables
 	keys = [];
-	localPlayer = new Player(100,100);
+	localPlayer = new Player();
 	localPlayer.username = prompt("What is your username?");
 	remotePlayers = []
 
