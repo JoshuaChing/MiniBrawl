@@ -8,11 +8,11 @@ canvas{
 	background-color:green;
 }
 
-#remotePlayersTitle{
+#playersList-title{
 	font-weight:bold;
 }
 
-#remotePlayers{
+#playersList{
 	width:180px;
 	height:480px;
 	float:left;

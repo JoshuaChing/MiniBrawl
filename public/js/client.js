@@ -17,8 +17,7 @@ var socketio,
 	width,
 	height,
 	keys,
-	localPlayer,
-	remotePlayers;
+	players;
 
 
 /********************************/
@@ -36,16 +35,13 @@ function init(){
 
 	//game variables
 	keys = [];
-	localPlayer = new Player();
-	localPlayer.username = prompt("What is your username?");
-	remotePlayers = []
+	setUsername = prompt("What is your username?");
+	players = []
 
 	//connect to port
 	socket = io.connect(window.location.hostname);
 	socket.on("connect",onClientConnect);
-	socket.on("initPlayerToClient",onInitPlayerToClient);
 	socket.on("newPlayerToClient",onNewPlayerToClient);
-	socket.on("newPositionToClientSelf",onNewPositionToClientSelf);
 	socket.on("newPositionToClient",onNewPositionToClient);
 	socket.on("removePlayerToClient",onRemovePlayerToClient);
 }
@@ -80,13 +76,11 @@ function localPlayerMovement(){
 function drawPlayers(){
 	ctx.font = "10px Verdana";
 	ctx.fillStyle="blue";
-	for (var i = 0; i < remotePlayers.length;i++){
-		ctx.fillRect(remotePlayers[i].x,remotePlayers[i].y,10,10);
-		ctx.fillText(remotePlayers[i].username,remotePlayers[i].x,remotePlayers[i].y-10);
+	for (var i = 0; i < players.length;i++){
+		ctx.fillRect(players[i].x,players[i].y,10,10);
+		ctx.fillText(players[i].username,players[i].x,players[i].y-10);
 	}
 	ctx.fillStyle="cyan";
-	ctx.fillRect(localPlayer.x,localPlayer.y,10,10);
-	ctx.fillText(localPlayer.username,localPlayer.x,localPlayer.y-10);
 }
 
 
@@ -110,37 +104,28 @@ function update(){
 //when client connects to server
 function onClientConnect(){
 	socket.emit("newPlayerToServer", {
-			username: localPlayer.username
+			username: setUsername
 	});
-}
-
-//player init to client
-function onInitPlayerToClient(data){
-	localPlayer.x = data.x;
-	localPlayer.y = data.y;
-	localPlayer.id = data.id;
 }
 
 //add new player to client's list
 function onNewPlayerToClient(data){
 	var newPlayer = new Player(data.username, data.x, data.y, data.id);
-	remotePlayers.push(newPlayer);
+	players.push(newPlayer);
 
-	var remotePlayersContainer = document.getElementById("remotePlayers");
-	remotePlayersContainer.innerHTML = (remotePlayersContainer.innerHTML + "<br/>" + data.username);
-}
-
-//new position of client to self
-function onNewPositionToClientSelf(data){
-	localPlayer.x=data.x;
-	localPlayer.y=data.y;
+	var playersContainer = document.getElementById("playersList");
+	playersContainer.innerHTML = (playersContainer.innerHTML + "<br/>" + data.username);
 }
 
 //new position of remote players to client
 function onNewPositionToClient(data){
 	var index = searchIndexById(data.id);
-	remotePlayers[index].x=data.x;
-	remotePlayers[index].y=data.y;
+	try{
+		players[index].x=data.x;
+		players[index].y=data.y;
+	}catch(e){
+		console.log(e);
+	}
 }
 
 //remove player by id on client
@@ -153,12 +138,12 @@ function onRemovePlayerToClient(data){
 		return;	
 	}
 
-	remotePlayers.splice(index,1);
+	players.splice(index,1);
 
-	var remotePlayersContainer = document.getElementById("remotePlayers");
-	remotePlayersContainer.innerHTML = ("<span id='remotePlayersTitle'>Users Connected:</span>");
-	for (var i = 0; i < remotePlayers.length; i++){
-		remotePlayersContainer.innerHTML = (remotePlayersContainer.innerHTML + "<br/>" + remotePlayers[i].username);
+	var playersContainer = document.getElementById("players");
+	playersContainer.innerHTML = ("<span id='playersTitle'>Users Connected:</span>");
+	for (var i = 0; i < players.length; i++){
+		playersContainer.innerHTML = (playersContainer.innerHTML + "<br/>" + players[i].username);
 	}
 }
 
@@ -166,8 +151,8 @@ function onRemovePlayerToClient(data){
 
 //returns index by id
 function searchIndexById(id){
-	for (var i = 0; i < remotePlayers.length; i++){
-		if (remotePlayers[i].id == id){
+	for (var i = 0; i < players.length; i++){
+		if (players[i].id == id){
 			return i;
 		}	
 	}
@@ -182,7 +167,6 @@ function searchIndexById(id){
 //start game when window finishes loading
 window.addEventListener("load", function(){
   init();
-  update();
 });
 
 //key code event listener

@@ -19,7 +19,7 @@ app.use(express.static(__dirname + '/public'));
 io.configure(function () {
   io.set("transports", ["xhr-polling"]);
   io.set("polling duration", 10);
-  io.set('log level', 1);
+  io.set('log level', 2);
 });
 
 //listen for web clients
@@ -57,10 +57,8 @@ function init(){
 		socket.on ("leftKeyToServer",onLeftKeyToServer);
 		socket.on ("rightKeyToServer",onRightKeyToServer);
 		socket.on ("upKeyToServer",onUpKeyToServer);
+		setInterval(function(){gameLoop(socket)}, 1000/FPS);
 	});
-
-	//start the game loop
-	setInterval(gameLoop,1000/FPS);
 }
 
 
@@ -69,9 +67,9 @@ function init(){
 /********************************/
 
 //main game loop
-function gameLoop(){
+function gameLoop(socket){
 	updatePhysics();
-	sendGameState();
+	sendGameState(socket);
 }
 
 //update physics
@@ -80,8 +78,14 @@ function updatePhysics(){
 }
 
 //send updates to clients
-function sendGameState(){
-
+function sendGameState(socket){
+	for (var i = 0; i < players.length; i++){
+    	socket.emit('newPositionToClient',{
+			id: players[i].getId(),
+			x: players[i].getX(),
+			y: players[i].getY()	
+		});
+   	} 
 }
 
 
@@ -119,14 +123,10 @@ function onNewPlayerToServer(data){
 
 	var newPlayer = new Player(data.username, startingX, startingY, this.id);
 
-	//initialise player for client
-	this.emit("initPlayerToClient",{
-		x: newPlayer.getX(),
-		y: newPlayer.getY(),
-		id: newPlayer.getId()
-	})
+	//add new player to server list
+	players.push(newPlayer);
 
-	//send existing player to new client
+	//send existing players to new client
 	for (var i = 0; i < players.length; i++){
 		var existingPlayer = players[i];
 		this.emit("newPlayerToClient", {
@@ -144,9 +144,6 @@ function onNewPlayerToServer(data){
 		y: newPlayer.getY(),
 		id: newPlayer.getId()
 	});
-
-	//add new player to server list
-	players.push(newPlayer);
 }
 
 //when left key is pressed
@@ -158,7 +155,6 @@ function onLeftKeyToServer(){
 		return;	
 	}
 	players[index].setX(players[index].getX()-2);
-	sendNewPositions(index,this);
 }
 
 //when right key is pressed
@@ -170,7 +166,6 @@ function onRightKeyToServer(){
 		return;	
 	}
 	players[index].setX(players[index].getX()+2);
-	sendNewPositions(index,this);
 }
 
 //when up key is pressed
@@ -182,26 +177,9 @@ function onUpKeyToServer(){
 		return;	
 	}
 	players[index].setY(players[index].getY()-2);
-	sendNewPositions(index,this);
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
-
-//send new position data to all clients
-function sendNewPositions(index,socket){
-	//send new position to client
-	socket.emit("newPositionToClientSelf",{
-		x: players[index].getX(),
-		y: players[index].getY()
-	})
-
-	//send new position to all other clients
-	socket.broadcast.emit("newPositionToClient",{
-		id: players[index].getId(),
-		x: players[index].getX(),
-		y: players[index].getY()	
-	});
-}
 
 //returns index by id
 function searchIndexById(id){
