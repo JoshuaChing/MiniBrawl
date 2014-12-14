@@ -1,11 +1,16 @@
-////REQUEST ANIMATION FRAME////
+/********************************/
+/* REQUEST ANIMATION FRAME      */
+/********************************/
 (function()
 {
 	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 	window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-////GAME VARIABLES////
+
+/********************************/
+/* GAME VARIABLES               */
+/********************************/
 var socketio,
 	canvas,
 	ctx,
@@ -15,7 +20,10 @@ var socketio,
 	localPlayer,
 	remotePlayers;
 
-////GAME INITIALISATION////
+
+/********************************/
+/* GAME INITIALISATION          */
+/********************************/
 function init(){
 
 	//canvas variables
@@ -25,66 +33,66 @@ function init(){
 	ctx = canvas.getContext("2d")
 	canvas.width = width;
 	canvas.height = height;
-	keys = [];
 
 	//game variables
-	var setUsername = prompt("What is your username?");
-	localPlayer = new Player(setUsername, 0, 0);
+	keys = [];
+	localPlayer = new Player(100,100);
+	localPlayer.username = prompt("What is your username?");
 	remotePlayers = []
 
 	//connect to port
 	socket = io.connect(window.location.hostname);
-	setSocketEventHandlers();
-
+	socket.on("connect",onClientConnect);
+	socket.on("initPlayerToClient",onInitPlayerToClient);
+	socket.on("newPlayerToClient",onNewPlayerToClient);
+	socket.on("newPositionToClientSelf",onNewPositionToClientSelf);
+	socket.on("newPositionToClient",onNewPositionToClient);
+	socket.on("removePlayerToClient",onRemovePlayerToClient);
 }
 
-////LOCAL PLAYER MOVEMENT////
+
+/********************************/
+/* LOCAL PLAYER MOVEMENT        */
+/********************************/
 function localPlayerMovement(){
 	var checkMovement = false;
 
 	//up key (s)
 	if (keys[87]){
-		localPlayer.setY(localPlayer.getY()-2);
-		checkMovement = true;
-	}
-
-	//down key (w)
-	if (keys[83]){
-		localPlayer.setY(localPlayer.getY()+2);
-		checkMovement = true;
+		socket.emit("upKeyToServer");
 	}
 
 	//key right (d)
 	if (keys[68]){
-		localPlayer.setX(localPlayer.getX()+2);
-		checkMovement = true;
+		socket.emit("rightKeyToServer");
 	}
 
 	//key left (a)
 	if (keys[65]){
-		localPlayer.setX(localPlayer.getX()-2);
-		checkMovement = true;
-	}
-
-	if (checkMovement){
-		onNewPositionToServer();
+		socket.emit("leftKeyToServer");
 	}
 }
 
-////DRAW ALL PLAYERS////
+
+/********************************/
+/* DRAW ALL PLAYERS             */
+/********************************/
 function drawPlayers(){
 	ctx.font = "10px Verdana";
 	ctx.fillStyle="blue";
 	for (var i = 0; i < remotePlayers.length;i++){
-		ctx.fillRect(remotePlayers[i].getX(),remotePlayers[i].getY(),10,10);
-		ctx.fillText(remotePlayers[i].getUsername(),remotePlayers[i].getX(),remotePlayers[i].getY()-10);
+		ctx.fillRect(remotePlayers[i].x,remotePlayers[i].y,10,10);
+		ctx.fillText(remotePlayers[i].username,remotePlayers[i].x,remotePlayers[i].y-10);
 	}
 	ctx.fillStyle="cyan";
-	ctx.fillRect(localPlayer.getX(),localPlayer.getY(),10,10);
-	ctx.fillText(localPlayer.getUsername(),localPlayer.getX(),localPlayer.getY()-10);
+	ctx.fillRect(localPlayer.x,localPlayer.y,10,10);
+	ctx.fillText(localPlayer.username,localPlayer.x,localPlayer.y-10);
 }
 
-////GAME ANIMATION LOOP////
+
+/********************************/
+/* GAME ANIMATION LOOP          */
+/********************************/
 function update(){
 	ctx.clearRect(0,0,width,height);
 	ctx.fillStyle="green";
@@ -94,79 +102,82 @@ function update(){
 	requestAnimationFrame(update);
 }
 
-////SOCKET EVENT HANDLERS////
-function setSocketEventHandlers(){
-	socket.on("connect",onClientConnect);
-	socket.on("newPlayerToClient",onNewPlayerToClient);
-	socket.on("newPositionToClient",onNewPositionToClient);
-	socket.on("removePlayerToClient",onRemovePlayerToClient);
 
-	//when client connects to server
-	function onClientConnect(){
-		socket.emit("newPlayerToServer", {
-				username: localPlayer.getUsername(),
-				x: localPlayer.getX(),
-				y: localPlayer.getY()
-			});
-	}
+/********************************/
+/* SOCKET EVENT HANDLERS        */
+/********************************/
 
-	//add new player to client's list
-	function onNewPlayerToClient(data){
-		var newPlayer = new Player(data.username, data.x, data.y);
-		newPlayer.setId(data.id);
-		remotePlayers.push(newPlayer);
-
-		var remotePlayersContainer = document.getElementById("remotePlayers");
-		remotePlayersContainer.innerHTML = (remotePlayersContainer.innerHTML + "<br/>" + data.username);
-	}
-
-	//new position of remote players to client
-	function onNewPositionToClient(data){
-		var index = searchIndexById(data.id);
-		remotePlayers[index].setX(data.x);
-		remotePlayers[index].setY(data.y);
-	}
-
-	//remove player by id on client
-	function onRemovePlayerToClient(data){
-		var index = searchIndexById(data.id);
-
-		//if id isn't found
-		if (index == -1){
-			console.log(this.id + ": id not found");
-			return;	
-		}
-
-		remotePlayers.splice(index,1);
-
-		var remotePlayersContainer = document.getElementById("remotePlayers");
-		remotePlayersContainer.innerHTML = ("<span id='remotePlayersTitle'>Users Connected:</span>");
-		for (var i = 0; i < remotePlayers.length; i++){
-			remotePlayersContainer.innerHTML = (remotePlayersContainer.innerHTML + "<br/>" + remotePlayers[i].getUsername());
-		}
-	}
-
-}
-
-//new position of local player to server
-function onNewPositionToServer(){
-	socket.emit("newPositionToServer",{
-		x: localPlayer.getX(),
-		y: localPlayer.getY()
+//when client connects to server
+function onClientConnect(){
+	socket.emit("newPlayerToServer", {
+			username: localPlayer.username
 	});
 }
+
+//player init to client
+function onInitPlayerToClient(data){
+	localPlayer.x = data.x;
+	localPlayer.y = data.y;
+	localPlayer.id = data.id;
+}
+
+//add new player to client's list
+function onNewPlayerToClient(data){
+	var newPlayer = new Player(data.username, data.x, data.y, data.id);
+	remotePlayers.push(newPlayer);
+
+	var remotePlayersContainer = document.getElementById("remotePlayers");
+	remotePlayersContainer.innerHTML = (remotePlayersContainer.innerHTML + "<br/>" + data.username);
+}
+
+//new position of client to self
+function onNewPositionToClientSelf(data){
+	localPlayer.x=data.x;
+	localPlayer.y=data.y;
+}
+
+//new position of remote players to client
+function onNewPositionToClient(data){
+	var index = searchIndexById(data.id);
+	remotePlayers[index].x=data.x;
+	remotePlayers[index].y=data.y;
+}
+
+//remove player by id on client
+function onRemovePlayerToClient(data){
+	var index = searchIndexById(data.id);
+
+	//if id isn't found
+	if (index == -1){
+		console.log(this.id + ": id not found");
+		return;	
+	}
+
+	remotePlayers.splice(index,1);
+
+	var remotePlayersContainer = document.getElementById("remotePlayers");
+	remotePlayersContainer.innerHTML = ("<span id='remotePlayersTitle'>Users Connected:</span>");
+	for (var i = 0; i < remotePlayers.length; i++){
+		remotePlayersContainer.innerHTML = (remotePlayersContainer.innerHTML + "<br/>" + remotePlayers[i].username);
+	}
+}
+
+/***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
 
 //returns index by id
 function searchIndexById(id){
 	for (var i = 0; i < remotePlayers.length; i++){
-		if (remotePlayers[i].getId() == id){
+		if (remotePlayers[i].id == id){
 			return i;
 		}	
 	}
 	return -1;
 }
 
-////EVENT LISTENERS////
+
+/********************************/
+/* EVENT LISTENERS              */
+/********************************/
 
 //start game when window finishes loading
 window.addEventListener("load", function(){

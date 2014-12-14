@@ -1,9 +1,9 @@
-var Player = function(startUsername,startX,startY){
+var Player = function(startUsername,startX,startY,initID){
 
 	var username = startUsername;
 	var x = startX;
 	var y = startY;
-	var id;
+	var id = initID;
 
 	//getters and setters
 	function getUsername(){
