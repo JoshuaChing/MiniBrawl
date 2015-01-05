@@ -77,7 +77,20 @@ function gameLoop(socket){
 
 //update sprite images
 function updateSprites(){
-
+	for (var i = 0; i < players.length; i++){
+		//set image variables
+		if (players[i].getVelocityX() <= 0.1 && players[i].getVelocityX() >= -0.1){
+			players[i].setFrame(1);
+			players[i].setMaxFrame(1);
+			players[i].setAction("S");
+		}
+		//set frame
+		if(players[i].getFrame() >= players[i].getMaxFrame()){
+			players[i].setFrame(1);
+		}else{
+			players[i].setFrame(players[i].getFrame()+1);
+		}
+	}
 }
 
 //update physics
@@ -183,6 +196,10 @@ function onLeftKeyToServer(){
 		console.log(this.id + ": id not found");
 		return;	
 	}
+	//set image variables
+	players[i].setMaxFrame(3);
+	players[i].setDirection("L");
+	players[i].setAction("W");
 	//calculate velocity
 	if (players[i].getVelocityX() > -players[i].getSpeed()){
 		players[i].setVelocityX(players[i].getVelocityX()-1);
@@ -197,6 +214,10 @@ function onRightKeyToServer(){
 		console.log(this.id + ": id not found");
 		return;	
 	}
+	//set image variables
+	players[i].setMaxFrame(3);
+	players[i].setDirection("R");
+	players[i].setAction("W");
 	//calculate velocity
 	if (players[i].getVelocityX() < players[i].getSpeed()){
 		players[i].setVelocityX(players[i].getVelocityX()+1);

@@ -96,13 +96,13 @@ function localPlayerMovement(){
 /********************************/
 function drawPlayers(){
 	ctx.font = "10px Verdana";
+	ctx.fillStyle="cyan";
 	for (var i = 0; i < players.length;i++){
 		try{
 			ctx.drawImage(images[players[i].character+players[i].action+players[i].direction+players[i].frame],players[i].x,players[i].y);
 		}catch(e){console.log(e)}
 		ctx.fillText(players[i].username,players[i].x,players[i].y-10);
 	}
-	ctx.fillStyle="cyan";
 }
 
 
