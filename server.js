@@ -71,7 +71,13 @@ function init(){
 //main game loop
 function gameLoop(socket){
 	updatePhysics();
+	updateSprites();
 	sendGameState(socket);
+}
+
+//update sprite images
+function updateSprites(){
+
 }
 
 //update physics
@@ -87,9 +93,9 @@ function updatePhysics(){
 		players[i].setY(players[i].getY() + players[i].getVelocityY());
 
 		//check for ground collision
-		if (players[i].getY() >= 490){
+		if (players[i].getY() >= 468){
 			players[i].setJumping(false);
-			players[i].setY(490);
+			players[i].setY(468);
 		}
 	}
 }
@@ -101,7 +107,11 @@ function sendGameState(socket){
     	socket.emit('newPositionToClient',{
 			id: players[i].getId(),
 			x: players[i].getX(),
-			y: players[i].getY()	
+			y: players[i].getY(),
+			character : players[i].getCharacter(),
+			direction : players[i].getDirection(),
+			frame :	players[i].getFrame(),
+			action : players[i].getAction()
 		});
    	} 
 }

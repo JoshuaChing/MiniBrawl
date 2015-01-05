@@ -9,6 +9,13 @@ var Player = function(startUsername,startX,startY,initID){
 	var speed = 3;
 	var jumping = false;
 
+	//	- 	- sprite variables
+	var character = "BlackNinja";
+	var direction = "R";
+	var frame = 1;
+	var maxFrame = 1;
+	var action = "S";
+
 	//getters and setters
 	function getUsername(){
 		return username;
@@ -74,6 +81,47 @@ var Player = function(startUsername,startX,startY,initID){
 		jumping = state;
 	}
 
+	// -	-	sprite variables
+	function getCharacter(){
+		return character;
+	}
+
+	function setCharacter(c){
+		character = c;
+	}
+
+	function getDirection(){
+		return direction;
+	}
+
+	function setDirection(d){
+		direction = d;
+	}
+
+	function getFrame(){
+		return frame;
+	}
+
+	function setFrame(f){
+		frame = f;
+	}
+
+	function getMaxFrame(){
+		return maxFrame;
+	}
+
+	function setMaxFrame(mf){
+		maxFrame = mf;
+	}
+
+	function getAction(){
+		return action;
+	}
+
+	function setAction(a){
+		action = a;
+	}
+
 	return{
 		getUsername : getUsername,
 		setUsername : setUsername,
@@ -90,7 +138,17 @@ var Player = function(startUsername,startX,startY,initID){
 		getSpeed : getSpeed,
 		setSpeed : setSpeed,
 		getJumping : getJumping,
-		setJumping : setJumping
+		setJumping : setJumping,
+		getCharacter : getCharacter,
+		setCharacter : setCharacter,
+		getDirection : getDirection,
+		setDirection : setDirection,
+		getFrame : getFrame,
+		setFrame : setFrame,
+		getMaxFrame : getMaxFrame,
+		setMaxFrame : setMaxFrame,
+		getAction : getAction,
+		setAction : setAction
 	}
 
 };

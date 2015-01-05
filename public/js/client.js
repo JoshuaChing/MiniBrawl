@@ -17,7 +17,8 @@ var socketio,
 	width,
 	height,
 	keys,
-	players;
+	players,
+	images;
 
 
 /********************************/
@@ -36,7 +37,8 @@ function init(){
 	//game variables
 	keys = [];
 	setUsername = prompt("What is your username?");
-	players = []
+	players = [];
+	images = {};
 
 	//connect to port
 	socket = io.connect(window.location.hostname);
@@ -46,6 +48,25 @@ function init(){
 	socket.on("removePlayerToClient",onRemovePlayerToClient);
 }
 
+
+/********************************/
+/* GAME LOAD IMAGES FUNCTION    */
+/********************************/
+function loadImage(name){
+	images[name] = new Image();
+	images[name].src = "img/"+name+".png";
+}
+
+function loadImages(){
+	loadImage("BlackNinjaSL1");
+	loadImage("BlackNinjaSR1");
+	loadImage("BlackNinjaWL1");
+	loadImage("BlackNinjaWL2");
+	loadImage("BlackNinjaWL3");
+	loadImage("BlackNinjaWR1");
+	loadImage("BlackNinjaWR2");
+	loadImage("BlackNinjaWR3");
+}
 
 /********************************/
 /* LOCAL PLAYER MOVEMENT        */
@@ -75,9 +96,10 @@ function localPlayerMovement(){
 /********************************/
 function drawPlayers(){
 	ctx.font = "10px Verdana";
-	ctx.fillStyle="blue";
 	for (var i = 0; i < players.length;i++){
-		ctx.fillRect(players[i].x,players[i].y,10,10);
+		try{
+			ctx.drawImage(images[players[i].character+players[i].action+players[i].direction+players[i].frame],players[i].x,players[i].y);
+		}catch(e){console.log(e)}
 		ctx.fillText(players[i].username,players[i].x,players[i].y-10);
 	}
 	ctx.fillStyle="cyan";
@@ -123,9 +145,11 @@ function onNewPositionToClient(data){
 	try{
 		players[index].x=data.x;
 		players[index].y=data.y;
-	}catch(e){
-		console.log(e);
-	}
+		players[index].character=data.character;
+		players[index].direction=data.direction;
+		players[index].frame=data.frame;
+		players[index].action=data.action;
+	}catch(e){console.log(e)}
 }
 
 //remove player by id on client
@@ -167,6 +191,7 @@ function searchIndexById(id){
 //start game when window finishes loading
 window.addEventListener("load", function(){
   init();
+  loadImages();
   update();
 });
 
