@@ -16,9 +16,10 @@ var socketio,
 	ctx,
 	width,
 	height,
-	keys,
-	players,
-	images;
+	keys=[],
+	players=[],
+	images={},
+	setCharacter = "BlackNinja";
 
 
 /********************************/
@@ -33,10 +34,6 @@ function init(){
 	ctx = canvas.getContext("2d")
 	canvas.width = width;
 	canvas.height = height;
-
-	//game variables
-	keys = [];
-	players = [];
 
 	//connect to port
 	socket = io.connect(window.location.hostname);
@@ -56,7 +53,6 @@ function loadImage(name){
 }
 
 function loadImages(){
-	images={};
 	loadImage("BlackNinjaSL1");
 	loadImage("BlackNinjaSR1");
 	loadImage("BlackNinjaWL1");
@@ -172,7 +168,7 @@ function onRemovePlayerToClient(data){
 
 	players.splice(index,1);
 
-	var playersContainer = document.getElementById("players");
+	var playersContainer = document.getElementById("playersList");
 	playersContainer.innerHTML = ("<span id='playersTitle'>Users Connected:</span>");
 	for (var i = 0; i < players.length; i++){
 		playersContainer.innerHTML = (playersContainer.innerHTML + "<br/>" + players[i].username);
@@ -214,11 +210,18 @@ document.body.addEventListener("keyup", function(e) {
 
 //login button event listener
 document.getElementById("gameLogin-start").addEventListener("click",function(){
+	//get values input and hide login view
 	setUsername = document.getElementById('gameLogin-username').value;
-	setCharacter = "BlackNinja";
 	document.getElementById("gameLogin").style.display="none";
-
 	//start game
 	init();
   	update();
-})
+});
+
+//game character icon event listeners
+document.getElementById("gameLogin-blackNinja").addEventListener("click",function(){
+	setCharacter="BlackNinja";
+});
+document.getElementById("gameLogin-whiteNinja").addEventListener("click",function(){
+	setCharacter="WhiteNinja";
+});
