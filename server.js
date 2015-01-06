@@ -106,9 +106,9 @@ function updatePhysics(){
 		players[i].setY(players[i].getY() + players[i].getVelocityY());
 
 		//check for ground collision
-		if (players[i].getY() >= 468){
+		if (players[i].getY() >= 448){
 			players[i].setJumping(false);
-			players[i].setY(468);
+			players[i].setY(448);
 		}
 	}
 }
@@ -163,7 +163,7 @@ function onNewPlayerToServer(data){
 	console.log(this.id + " has set the username " + data.username);
 
 	//create new player object
-	var newPlayer = new Player(data.username, startingX, startingY, this.id);
+	var newPlayer = new Player(data.username,data.character, startingX, startingY, this.id);
 
 	//add new player to server list
 	players.push(newPlayer);

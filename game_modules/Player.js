@@ -1,4 +1,4 @@
-var Player = function(startUsername,startX,startY,initID){
+var Player = function(startUsername,startCharacter,startX,startY,initID){
 
 	var username = startUsername;
 	var x = startX;
@@ -10,7 +10,7 @@ var Player = function(startUsername,startX,startY,initID){
 	var jumping = false;
 
 	//	- 	- sprite variables
-	var character = "BlackNinja";
+	var character = startCharacter;
 	var direction = "R";
 	var frame = 1;
 	var maxFrame = 1;

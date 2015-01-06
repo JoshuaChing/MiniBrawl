@@ -5,9 +5,27 @@
 </head>
 
 <body>
-	<canvas id="canvas"></canvas>
-	<div id="playersList">
-                <span id="playersList-Title">Users Connected:</span>
+	<div id="gameContainer">
+		<canvas id="canvas"></canvas>
+		<div id="playersList">
+       		        <span id="playersList-Title">Users Connected:</span>
+    	</div>
+    </div>
+    <div id="gameLogin">
+    	<div id="gameLogin-background"></div>
+    		<div id="gameLogin-forms">
+    			<h1 id="gameLogin-title">MINI BRAWL</h1>
+    			Name: </br>
+    			<input type="text" id="gameLogin-username">
+    			</br></br>
+    			Character:
+    			</br></br>
+    		    <div class="gameLogin-character"></div>
+                <div class="gameLogin-character"></div>
+                <div class="gameLogin-character"></div>
+                <div class="gameLogin-character"></div>
+                <button id="gameLogin-start">START</button>
+            </div>
     </div>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/Player.js"></script>

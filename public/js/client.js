@@ -27,8 +27,8 @@ var socketio,
 function init(){
 
 	//canvas variables
-	width = 500;
-	height = 500;
+	width = 640;
+	height = 480;
 	canvas = document.getElementById("canvas")
 	ctx = canvas.getContext("2d")
 	canvas.width = width;
@@ -36,9 +36,7 @@ function init(){
 
 	//game variables
 	keys = [];
-	setUsername = prompt("What is your username?");
 	players = [];
-	images = {};
 
 	//connect to port
 	socket = io.connect(window.location.hostname);
@@ -58,6 +56,7 @@ function loadImage(name){
 }
 
 function loadImages(){
+	images={};
 	loadImage("BlackNinjaSL1");
 	loadImage("BlackNinjaSR1");
 	loadImage("BlackNinjaWL1");
@@ -66,6 +65,14 @@ function loadImages(){
 	loadImage("BlackNinjaWR1");
 	loadImage("BlackNinjaWR2");
 	loadImage("BlackNinjaWR3");
+	loadImage("WhiteNinjaSL1");
+	loadImage("WhiteNinjaSR1");
+	loadImage("WhiteNinjaWL1");
+	loadImage("WhiteNinjaWL2");
+	loadImage("WhiteNinjaWL3");
+	loadImage("WhiteNinjaWR1");
+	loadImage("WhiteNinjaWR2");
+	loadImage("WhiteNinjaWR3");
 }
 
 /********************************/
@@ -126,7 +133,8 @@ function update(){
 //when client connects to server
 function onClientConnect(){
 	socket.emit("newPlayerToServer", {
-			username: setUsername
+			username: setUsername,
+			character : setCharacter
 	});
 }
 
@@ -188,11 +196,9 @@ function searchIndexById(id){
 /* EVENT LISTENERS              */
 /********************************/
 
-//start game when window finishes loading
+//load images when window finishes loading
 window.addEventListener("load", function(){
-  init();
-  loadImages();
-  update();
+	loadImages();
 });
 
 //key code event listener
@@ -204,3 +210,15 @@ document.body.addEventListener("keydown", function(e) {
 document.body.addEventListener("keyup", function(e) {
     keys[e.keyCode] = false;
 });
+
+
+//login button event listener
+document.getElementById("gameLogin-start").addEventListener("click",function(){
+	setUsername = document.getElementById('gameLogin-username').value;
+	setCharacter = "BlackNinja";
+	document.getElementById("gameLogin").style.display="none";
+
+	//start game
+	init();
+  	update();
+})
