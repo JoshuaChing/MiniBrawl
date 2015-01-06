@@ -210,12 +210,19 @@ document.body.addEventListener("keyup", function(e) {
 
 //login button event listener
 document.getElementById("gameLogin-start").addEventListener("click",function(){
-	//get values input and hide login view
+	//get values input
 	setUsername = document.getElementById('gameLogin-username').value;
-	document.getElementById("gameLogin").style.display="none";
-	//start game
-	init();
-  	update();
+
+	//check for white space or nothing in input field
+	if(setUsername.match(/^\s*$/)){
+		document.getElementById("gameLogin-requiredUsername").style.display="inline-block";
+  	}else{
+  		//hide login view
+		document.getElementById("gameLogin").style.display="none";
+		//start game
+		init();
+  		update();
+  	}
 });
 
 //game character icon event listeners

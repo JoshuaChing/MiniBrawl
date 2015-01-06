@@ -115,3 +115,9 @@ input[type="text"].focus{
 	margin-right:5px;
 	margin-bottom:20px;
 }
+
+#gameLogin-requiredUsername{
+	display:none;
+	color:#FF0000;
+	font-size:12px;
+}
