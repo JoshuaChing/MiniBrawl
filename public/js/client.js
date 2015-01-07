@@ -69,6 +69,22 @@ function loadImages(){
 	loadImage("WhiteNinjaWR1");
 	loadImage("WhiteNinjaWR2");
 	loadImage("WhiteNinjaWR3");
+	loadImage("KnightSL1");
+	loadImage("KnightSR1");
+	loadImage("KnightWL1");
+	loadImage("KnightWL2");
+	loadImage("KnightWL3");
+	loadImage("KnightWR1");
+	loadImage("KnightWR2");
+	loadImage("KnightWR3");
+	loadImage("JoeSL1");
+	loadImage("JoeSR1");
+	loadImage("JoeWL1");
+	loadImage("JoeWL2");
+	loadImage("JoeWL3");
+	loadImage("JoeWR1");
+	loadImage("JoeWR2");
+	loadImage("JoeWR3");
 }
 
 /********************************/
@@ -231,4 +247,10 @@ document.getElementById("gameLogin-blackNinja").addEventListener("click",functio
 });
 document.getElementById("gameLogin-whiteNinja").addEventListener("click",function(){
 	setCharacter="WhiteNinja";
+});
+document.getElementById("gameLogin-knight").addEventListener("click",function(){
+	setCharacter="Knight";
+});
+document.getElementById("gameLogin-joe").addEventListener("click",function(){
+	setCharacter="Joe";
 });
