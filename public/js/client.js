@@ -19,7 +19,8 @@ var socketio,
 	keys=[],
 	players=[],
 	images={},
-	setCharacter = "BlackNinja";
+	setCharacter = "BlackNinja",
+	iconSelected = 0;
 
 
 /********************************/
@@ -211,6 +212,7 @@ function searchIndexById(id){
 //load images when window finishes loading
 window.addEventListener("load", function(){
 	loadImages();
+	iconSelection(0,0); //set first character as selected
 });
 
 //key code event listener
@@ -244,13 +246,27 @@ document.getElementById("gameLogin-start").addEventListener("click",function(){
 //game character icon event listeners
 document.getElementById("gameLogin-blackNinja").addEventListener("click",function(){
 	setCharacter="BlackNinja";
+	iconSelection(iconSelected,0);
 });
 document.getElementById("gameLogin-whiteNinja").addEventListener("click",function(){
 	setCharacter="WhiteNinja";
+	iconSelection(iconSelected,1);
 });
 document.getElementById("gameLogin-knight").addEventListener("click",function(){
 	setCharacter="Knight";
+	iconSelection(iconSelected,2);
 });
 document.getElementById("gameLogin-joe").addEventListener("click",function(){
 	setCharacter="Joe";
+	iconSelection(iconSelected,3);
 });
+
+//function to change color of character icon selected before
+function iconSelection(oldIconIndex,newIconIndex){
+	var icons = document.getElementsByClassName("gameLogin-character");
+	icons[oldIconIndex].style.borderColor="#000000";
+	icons[oldIconIndex].style.backgroundColor="#ecf0f1";
+	icons[newIconIndex].style.borderColor="#33FF33";
+	icons[newIconIndex].style.backgroundColor="#3498db";
+	iconSelected = newIconIndex;
+}

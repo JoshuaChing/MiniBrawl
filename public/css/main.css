@@ -107,17 +107,46 @@ input[type="text"].focus{
 }
 
 .gameLogin-character{
-	width:77px;
-	height:76px;
-	background-color:#000000;
+	width:71px;
+	height:71px;
+	background-color:#ecf0f1;
 	display:block;
 	float:left;
 	margin-right:5px;
 	margin-bottom:20px;
+	border: 3px #000000 solid;
+}
+
+.gameLogin-character:hover{
+	background-color:#3498db;
 }
 
 #gameLogin-requiredUsername{
 	display:none;
 	color:#FF0000;
 	font-size:12px;
+}
+
+#gameLogin-blackNinja{
+	background-image: url("/img/BlackNinjaIcon.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+}
+
+#gameLogin-whiteNinja{
+	background-image: url("/img/WhiteNinjaIcon.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+}
+
+#gameLogin-knight{
+	background-image: url("/img/KnightIcon.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+}
+
+#gameLogin-joe{
+	background-image: url("/img/JoeIcon.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
 }
