@@ -37,7 +37,10 @@ var startingX;
 var startingY;
 var FPS;
 var gravity;
-var friciton;
+var friction;
+var canvasWidth;
+var canvasHeight;
+var blocks =[];
 
 
 /********************************/
@@ -50,6 +53,30 @@ function init(){
 	FPS = 60;
 	gravity = 0.3;
 	friction = 0.8;
+	canvasWidth = 640;
+	canvasHeight = 480;
+
+	//block values
+	blocks.push({
+		x:0,
+		y:canvasHeight-20,
+		width:canvasWidth,
+		height:20
+	});
+
+	blocks.push({
+		x:40,
+		y:canvasHeight-100,
+		width:150,
+		height:20
+	});
+
+	blocks.push({
+		x:canvasWidth-190,
+		y:canvasHeight-100,
+		width:150,
+		height:20
+	});
 
 	//called for every new socket connection
 	io.sockets.on("connection", function(socket){
@@ -106,9 +133,19 @@ function updatePhysics(){
 		players[i].setY(players[i].getY() + players[i].getVelocityY());
 
 		//check for ground collision
-		if (players[i].getY() >= 448){
+		if (players[i].getY() >= (480-20-players[i].getHeight())){
 			players[i].setJumping(false);
-			players[i].setY(448);
+			players[i].setGrounded(true);
+			players[i].setY(480-20-players[i].getHeight());
+		}
+
+		//check for blocks collision (ignore first block);
+		for (var j = 1; j < blocks.length; j++){
+			try{
+				checkBlockCollision(players[i], blocks[j]);
+			}catch(err){
+				console.log(err);
+			}
 		}
 	}
 }
@@ -129,6 +166,61 @@ function sendGameState(socket){
    	} 
 }
 
+/***GAME LOOP - HELPER FUNCTIONS***/
+function checkBlockCollision(objA, objB){
+	//get vectors to check against (center to center)
+	var vX = (objA.getX() + (objA.getWidth()/2)) - (objB.x + (objB.width/2));
+	var vY = (objA.getY() + (objA.getHeight()/2)) - (objB.y + (objB.height/2));
+	// half widths and half heights
+	var hWidths = (objA.getWidth()/2) + (objB.width/2);
+	var hHeights = (objA.getHeight()/2) + (objB.height/2);
+	var colDir = "none";
+
+	//check for collision against vectors and half width/heights
+	if(Math.abs(vX) < hWidths && Math.abs(vY) < hHeights){
+		var oX = hWidths - Math.abs(vX);
+        var oY = hHeights - Math.abs(vY);
+
+        if (oX >= oY) {
+            if (vY > 0) {
+            	//collision on objA top
+                colDir = "t";
+                objA.setY(objA.getY() + oY);
+            } else {
+            	//collision on objA bottom
+                colDir = "b";
+                objA.setY(objA.getY() - oY);
+            }
+        } else {
+            if (vX > 0) {
+            	//collision on objA reft;
+                colDir = "l";
+                objA.setX(objA.getX() + oX);
+            } else {
+            	//collision on objA right
+                colDir = "r";
+                objA.setX(objA.getX() - oX);
+            }
+        }
+
+    }
+    
+    //more collision physics
+    if (colDir === "l" || colDir === "r") {
+    	objA.setVelocityX(0);
+        objA.setJumping(false);
+    } else if (colDir === "b") {
+        objA.setGrounded(true);
+        objA.setJumping(false);
+    } else if (colDir === "t") {
+     	objA.setVelocityY(objA.getVelocityY() * -1);
+    }
+
+    if(objA.getGrounded()){
+    	objA.setVelocityY(0);
+    }
+
+}
 
 /********************************/
 /* SOCKET EVENT HANDLERS        */
@@ -161,9 +253,35 @@ function onClientDisconnect(){
 //when new player joins server
 function onNewPlayerToServer(data){
 	console.log(this.id + " has set the username " + data.username);
+	var newWidth;
+	var newHeight;
+
+	//determine width and height of character
+	switch(data.character){
+		case "BlackNinja":
+			newWidth = 25;
+			newHeight = 32;
+			break;
+		case "WhiteNinja":
+			newWidth = 25;
+			newHeight = 32;
+			break;
+		case "Knight":
+			newWidth = 25;
+			newHeight = 35;
+			break;
+		case "Joe":
+			newWidth = 25;
+			newHeight = 35;
+			break;
+		default:
+			newWidth = 25;
+			newHeight = 32;
+
+	}
 
 	//create new player object
-	var newPlayer = new Player(data.username,data.character, startingX, startingY, this.id);
+	var newPlayer = new Player(data.username,data.character, startingX, startingY, this.id, newWidth, newHeight);
 
 	//add new player to server list
 	players.push(newPlayer);
@@ -233,8 +351,9 @@ function onUpKeyToServer(){
 		return;	
 	}
 	//jumping logic
-	if (!players[i].getJumping()){
+	if (!players[i].getJumping() && players[i].getGrounded()){
 		players[i].setJumping(true);
+		players[i].setGrounded(false);
 		players[i].setVelocityY(-players[i].getSpeed()*2);
 	}
 }

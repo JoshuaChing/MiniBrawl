@@ -1,4 +1,4 @@
-var Player = function(startUsername,startCharacter,startX,startY,initID){
+var Player = function(startUsername,startCharacter,startX,startY,initID,startWidth,startHeight){
 
 	var username = startUsername;
 	var x = startX;
@@ -6,8 +6,9 @@ var Player = function(startUsername,startCharacter,startX,startY,initID){
 	var id = initID;
 	var velocityX = 0;
 	var velocityY = 0;
-	var speed = 3;
+	var speed = 4;
 	var jumping = false;
+	var grounded = false;
 
 	//	- 	- sprite variables
 	var character = startCharacter;
@@ -15,6 +16,8 @@ var Player = function(startUsername,startCharacter,startX,startY,initID){
 	var frame = 1;
 	var maxFrame = 1;
 	var action = "S";
+	var width = startWidth;
+	var height = startHeight;
 
 	//getters and setters
 	function getUsername(){
@@ -81,6 +84,14 @@ var Player = function(startUsername,startCharacter,startX,startY,initID){
 		jumping = state;
 	}
 
+	function getGrounded(){
+		return grounded;
+	}
+
+	function setGrounded(state){
+		grounded = state;
+	}
+
 	// -	-	sprite variables
 	function getCharacter(){
 		return character;
@@ -122,6 +133,22 @@ var Player = function(startUsername,startCharacter,startX,startY,initID){
 		action = a;
 	}
 
+	function getWidth(){
+		return width;
+	}
+
+	function setWidth(w){
+		width = w;
+	}
+
+	function getHeight(){
+		return height;
+	}
+
+	function setHeight(h){
+		height = h;
+	}
+
 	return{
 		getUsername : getUsername,
 		setUsername : setUsername,
@@ -139,6 +166,8 @@ var Player = function(startUsername,startCharacter,startX,startY,initID){
 		setSpeed : setSpeed,
 		getJumping : getJumping,
 		setJumping : setJumping,
+		getGrounded : getGrounded,
+		setGrounded : setGrounded,
 		getCharacter : getCharacter,
 		setCharacter : setCharacter,
 		getDirection : getDirection,
@@ -148,7 +177,11 @@ var Player = function(startUsername,startCharacter,startX,startY,initID){
 		getMaxFrame : getMaxFrame,
 		setMaxFrame : setMaxFrame,
 		getAction : getAction,
-		setAction : setAction
+		setAction : setAction,
+		getWidth : getWidth,
+		setWidth : setWidth,
+		getHeight : getHeight,
+		setHeight : getHeight
 	}
 
 };

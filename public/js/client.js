@@ -20,7 +20,8 @@ var socketio,
 	players=[],
 	images={},
 	setCharacter = "BlackNinja",
-	iconSelected = 0;
+	iconSelected = 0,
+	blocks =[];
 
 
 /********************************/
@@ -42,51 +43,31 @@ function init(){
 	socket.on("newPlayerToClient",onNewPlayerToClient);
 	socket.on("newPositionToClient",onNewPositionToClient);
 	socket.on("removePlayerToClient",onRemovePlayerToClient);
+
+	//block values
+	blocks.push({
+		x:0,
+		y:height-20,
+		width:width,
+		height:20
+	});
+
+	blocks.push({
+		x:40,
+		y:height-100,
+		width:150,
+		height:20
+	});
+
+	blocks.push({
+		x:width-190,
+		y:height-100,
+		width:150,
+		height:20
+	});
+
 }
 
-
-/********************************/
-/* GAME LOAD IMAGES FUNCTION    */
-/********************************/
-function loadImage(name){
-	images[name] = new Image();
-	images[name].src = "img/"+name+".png";
-}
-
-function loadImages(){
-	loadImage("BlackNinjaSL1");
-	loadImage("BlackNinjaSR1");
-	loadImage("BlackNinjaWL1");
-	loadImage("BlackNinjaWL2");
-	loadImage("BlackNinjaWL3");
-	loadImage("BlackNinjaWR1");
-	loadImage("BlackNinjaWR2");
-	loadImage("BlackNinjaWR3");
-	loadImage("WhiteNinjaSL1");
-	loadImage("WhiteNinjaSR1");
-	loadImage("WhiteNinjaWL1");
-	loadImage("WhiteNinjaWL2");
-	loadImage("WhiteNinjaWL3");
-	loadImage("WhiteNinjaWR1");
-	loadImage("WhiteNinjaWR2");
-	loadImage("WhiteNinjaWR3");
-	loadImage("KnightSL1");
-	loadImage("KnightSR1");
-	loadImage("KnightWL1");
-	loadImage("KnightWL2");
-	loadImage("KnightWL3");
-	loadImage("KnightWR1");
-	loadImage("KnightWR2");
-	loadImage("KnightWR3");
-	loadImage("JoeSL1");
-	loadImage("JoeSR1");
-	loadImage("JoeWL1");
-	loadImage("JoeWL2");
-	loadImage("JoeWL3");
-	loadImage("JoeWR1");
-	loadImage("JoeWR2");
-	loadImage("JoeWR3");
-}
 
 /********************************/
 /* LOCAL PLAYER MOVEMENT        */
@@ -127,12 +108,26 @@ function drawPlayers(){
 
 
 /********************************/
-/* GAME ANIMATION LOOP          */
+/* DRAW GAME MAP                */
 /********************************/
-function update(){
+function drawMap(){
 	ctx.clearRect(0,0,width,height);
 	ctx.fillStyle="green";
 	ctx.fillRect(0,0,width,height);
+
+	ctx.fillStyle="#ecf0f1";
+	ctx.fill();
+	for (var i=0; i<blocks.length;i++){
+		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,blocks[i].height);
+	}
+}
+
+
+/********************************/
+/* GAME ANIMATION LOOP          */
+/********************************/
+function update(){
+	drawMap();
 	localPlayerMovement();
 	drawPlayers();
 	requestAnimationFrame(update);
@@ -226,7 +221,7 @@ document.body.addEventListener("keyup", function(e) {
 });
 
 
-//login button event listener
+//login button event listener - GAME STARTS HERE
 document.getElementById("gameLogin-start").addEventListener("click",function(){
 	//get values input
 	setUsername = document.getElementById('gameLogin-username').value;
@@ -269,4 +264,48 @@ function iconSelection(oldIconIndex,newIconIndex){
 	icons[newIconIndex].style.borderColor="#33FF33";
 	icons[newIconIndex].style.backgroundColor="#3498db";
 	iconSelected = newIconIndex;
+}
+
+
+/********************************/
+/* GAME LOAD IMAGES FUNCTIONS   */
+/********************************/
+function loadImage(name){
+	images[name] = new Image();
+	images[name].src = "img/"+name+".png";
+}
+
+function loadImages(){
+	loadImage("BlackNinjaSL1");
+	loadImage("BlackNinjaSR1");
+	loadImage("BlackNinjaWL1");
+	loadImage("BlackNinjaWL2");
+	loadImage("BlackNinjaWL3");
+	loadImage("BlackNinjaWR1");
+	loadImage("BlackNinjaWR2");
+	loadImage("BlackNinjaWR3");
+	loadImage("WhiteNinjaSL1");
+	loadImage("WhiteNinjaSR1");
+	loadImage("WhiteNinjaWL1");
+	loadImage("WhiteNinjaWL2");
+	loadImage("WhiteNinjaWL3");
+	loadImage("WhiteNinjaWR1");
+	loadImage("WhiteNinjaWR2");
+	loadImage("WhiteNinjaWR3");
+	loadImage("KnightSL1");
+	loadImage("KnightSR1");
+	loadImage("KnightWL1");
+	loadImage("KnightWL2");
+	loadImage("KnightWL3");
+	loadImage("KnightWR1");
+	loadImage("KnightWR2");
+	loadImage("KnightWR3");
+	loadImage("JoeSL1");
+	loadImage("JoeSR1");
+	loadImage("JoeWL1");
+	loadImage("JoeWL2");
+	loadImage("JoeWL3");
+	loadImage("JoeWR1");
+	loadImage("JoeWR2");
+	loadImage("JoeWR3");
 }
