@@ -17,8 +17,6 @@ app.use(express.static(__dirname + '/public'));
 
 //configure socket.io to be used on heroku
 io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
   io.set('log level', 2);
 });
 
