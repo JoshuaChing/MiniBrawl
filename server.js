@@ -128,24 +128,32 @@ function updatePhysics(){
 		players[i].setVelocityX(players[i].getVelocityX()*friction);
 		players[i].setVelocityY(players[i].getVelocityY()+gravity);
 
+		//reset grounded
+		players[i].setGrounded(false);
+
+		//check for blocks collision (ignore first block);
+		for (var j = 0; j < blocks.length; j++){
+			try{
+				checkBlockCollision(players[i], blocks[j]);
+			}catch(err){
+				console.log("block collision: " + err);
+			}
+		}
+
+		//set grounded
+		if(players[i].getGrounded()){
+			players[i].setVelocityY(0);
+		}
+
 		//set position
 		players[i].setX(players[i].getX() + players[i].getVelocityX());
 		players[i].setY(players[i].getY() + players[i].getVelocityY());
 
-		//check for ground collision
-		if (players[i].getY() >= (480-20-players[i].getHeight())){
-			players[i].setJumping(false);
+		//make sure player is not through the ground
+		if(players[i].getY() >= (canvasHeight - 20 - players[i].getHeight())){
+			players[i].setY(canvasHeight - 20 - players[i].getHeight());
 			players[i].setGrounded(true);
-			players[i].setY(480-20-players[i].getHeight());
-		}
-
-		//check for blocks collision (ignore first block);
-		for (var j = 1; j < blocks.length; j++){
-			try{
-				checkBlockCollision(players[i], blocks[j]);
-			}catch(err){
-				console.log(err);
-			}
+			players[i].setJumping(false);
 		}
 	}
 }
@@ -179,7 +187,7 @@ function checkBlockCollision(objA, objB){
 	//check for collision against vectors and half width/heights
 	if(Math.abs(vX) < hWidths && Math.abs(vY) < hHeights){
 		var oX = hWidths - Math.abs(vX);
-        var oY = hHeights - Math.abs(vY);
+		var oY = hHeights - Math.abs(vY);
 
         if (oX >= oY) {
             if (vY > 0) {
@@ -204,22 +212,17 @@ function checkBlockCollision(objA, objB){
         }
 
     }
-    
+
     //more collision physics
-    if (colDir === "l" || colDir === "r") {
-    	objA.setVelocityX(0);
-        objA.setJumping(false);
-    } else if (colDir === "b") {
-        objA.setGrounded(true);
-        objA.setJumping(false);
-    } else if (colDir === "t") {
-     	objA.setVelocityY(objA.getVelocityY() * -1);
-    }
-
-    if(objA.getGrounded()){
-    	objA.setVelocityY(0);
-    }
-
+	if (colDir === "l" || colDir === "r") {
+		objA.setVelocityX(0);
+		objA.setJumping(false);
+	} else if (colDir === "b") {
+		objA.setGrounded(true);
+		objA.setJumping(false);
+	} else if (colDir === "t") {
+		objA.setVelocityY(objA.getVelocityY() * -1);
+	}
 }
 
 /********************************/
