@@ -1,6 +1,6 @@
 html{
 	font-family:verdana;
-	background-color:#000000;
+	background-color:#ffffff;
 }
 
 /*GAME VIEW*/
@@ -10,7 +10,7 @@ canvas{
 	border:1px solid black;
 	background-color:green;
 	width:640px;
-	height:480px;
+	height:350px;
 }
 
 #gameContainer{
@@ -25,12 +25,21 @@ canvas{
 #playersList{
 	width:180px;
 	height:460px;
-	float:left;
+	float:right;
 	padding:10px;
 	border:1px solid black;
 	border-left:none;
 	background-color:gray;
 	color:white;
+}
+
+#chatContainer{
+	width:640px;
+	height:129px;
+	border:1px solid black;
+	border-top:none;
+	background-color:blue;
+	float:left;
 }
 
 /*GAME LOGIN VIEW*/

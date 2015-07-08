@@ -52,7 +52,7 @@ function init(){
 	gravity = 0.3;
 	friction = 0.8;
 	canvasWidth = 640;
-	canvasHeight = 480;
+	canvasHeight = 350;
 
 	//block values
 	blocks.push({

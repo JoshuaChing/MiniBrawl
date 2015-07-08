@@ -31,7 +31,7 @@ function init(){
 
 	//canvas variables
 	width = 640;
-	height = 480;
+	height = 350;
 	canvas = document.getElementById("canvas")
 	ctx = canvas.getContext("2d")
 	canvas.width = width;
@@ -75,18 +75,18 @@ function init(){
 function localPlayerMovement(){
 	var checkMovement = false;
 
-	//up key (s)
-	if (keys[87]){
+	//up key (w) and key (up)
+	if (keys[87] || keys[38]){
 		socket.emit("upKeyToServer");
 	}
 
-	//key right (d)
-	if (keys[68]){
+	//key right (d) and key (right)
+	if (keys[68] || keys[39]){
 		socket.emit("rightKeyToServer");
 	}
 
-	//key left (a)
-	if (keys[65]){
+	//key left (a) and key (left)
+	if (keys[65] || keys[37]){
 		socket.emit("leftKeyToServer");
 	}
 }
