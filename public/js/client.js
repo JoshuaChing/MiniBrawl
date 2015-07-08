@@ -97,7 +97,7 @@ function localPlayerMovement(){
 /********************************/
 function drawPlayers(){
 	ctx.font = "10px Verdana";
-	ctx.fillStyle="cyan";
+	ctx.fillStyle="#000000";
 	for (var i = 0; i < players.length;i++){
 		try{
 			ctx.drawImage(images[players[i].character+players[i].action+players[i].direction+players[i].frame],players[i].x,players[i].y);
@@ -112,10 +112,10 @@ function drawPlayers(){
 /********************************/
 function drawMap(){
 	ctx.clearRect(0,0,width,height);
-	ctx.fillStyle="green";
+	ctx.fillStyle="#87CEEB"; //sky blue
 	ctx.fillRect(0,0,width,height);
 
-	ctx.fillStyle="#ecf0f1";
+	ctx.fillStyle="green";
 	ctx.fill();
 	for (var i=0; i<blocks.length;i++){
 		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,blocks[i].height);
