@@ -190,7 +190,9 @@ function onRemovePlayerToClient(data){
 
 //chat message to client
 function onChatMessageToClient(data){
-	
+	var chatOutput = document.getElementById("chat-output");
+	chatOutput.innerHTML = (chatOutput.innerHTML + "<br/>" + data);
+	chatOutput.scrollTop = chatOutput.scrollHeight;
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/

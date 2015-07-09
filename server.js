@@ -247,6 +247,9 @@ function onClientDisconnect(){
 		return;	
 	}
 	
+	//send message to other players
+	this.broadcast.emit("chatMessageToClient", players[index].getUsername() + "has left the game.");
+
 	players.splice(index,1);
 	
 	//send id to remove to all other clients
@@ -307,6 +310,9 @@ function onNewPlayerToServer(data){
 		y: newPlayer.getY(),
 		id: newPlayer.getId()
 	});
+
+	//send message to other players
+	this.broadcast.emit("chatMessageToClient", newPlayer.getUsername() + "has joined the game.");
 }
 
 //when left key is pressed
@@ -315,7 +321,7 @@ function onLeftKeyToServer(){
 	//if id isn't found
 	if (i == -1){
 		console.log(this.id + ": id not found");
-		return;	
+		return;
 	}
 	//set image variables
 	players[i].setMaxFrame(3);
@@ -363,7 +369,15 @@ function onUpKeyToServer(){
 
 //when chat message is sent to server
 function onChatMessageToServer(data){
-	console.log("Message: " + data);
+	var i = searchIndexById(this.id);
+	//if id isn't found
+	if (i == -1){
+		console.log(this.id + ": id not found");
+		return;	
+	}
+	var message = players[i].getUsername() + ": " + data;
+	io.sockets.emit("chatMessageToClient", message);
+	console.log(message);
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
