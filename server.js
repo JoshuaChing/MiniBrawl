@@ -14,12 +14,6 @@ app.set('view engine', 'ejs');
 app.engine('html',require('ejs').renderFile);
 app.use(express.static(__dirname + '/public'));
 
-
-//configure socket.io to be used on heroku
-io.configure(function () {
-  io.set('log level', 2);
-});
-
 //listen for web clients
 server.listen(port, function(){
     console.log("listening on :"+port);

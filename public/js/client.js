@@ -38,7 +38,7 @@ function init(){
 	canvas.height = height;
 
 	//connect to port
-	socket = io.connect(window.location.hostname);
+	socket = io();
 	socket.on("connect",onClientConnect);
 	socket.on("newPlayerToClient",onNewPlayerToClient);
 	socket.on("newPositionToClient",onNewPositionToClient);
