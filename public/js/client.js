@@ -21,13 +21,17 @@ var socketio,
 	images={},
 	setCharacter = "BlackNinja",
 	iconSelected = 0,
-	blocks =[];
+	blocks =[],
+	chatDisabled = null;
 
 
 /********************************/
 /* GAME INITIALISATION          */
 /********************************/
 function init(){
+
+	//chat varaibles
+	chatDisabled = true;
 
 	//canvas variables
 	width = 640;
@@ -76,19 +80,21 @@ function init(){
 function localPlayerMovement(){
 	var checkMovement = false;
 
-	//up key (w) and key (up)
-	if (keys[87] || keys[38]){
-		socket.emit("upKeyToServer");
-	}
+	if(chatDisabled){
+		//up key (w) and key (up)
+		if (keys[87] || keys[38]){
+			socket.emit("upKeyToServer");
+		}
 
-	//key right (d) and key (right)
-	if (keys[68] || keys[39]){
-		socket.emit("rightKeyToServer");
-	}
+		//key right (d) and key (right)
+		if (keys[68] || keys[39]){
+			socket.emit("rightKeyToServer");
+		}
 
-	//key left (a) and key (left)
-	if (keys[65] || keys[37]){
-		socket.emit("leftKeyToServer");
+		//key left (a) and key (left)
+		if (keys[65] || keys[37]){
+			socket.emit("leftKeyToServer");
+		}
 	}
 }
 
@@ -212,11 +218,44 @@ function searchIndexById(id){
 /* CHAT                         */
 /********************************/
 
-//chat submit listener
-document.getElementById("chat-submit").addEventListener("click", function(){
-	var input = document.getElementById("chat-input");
-	socket.emit("chatMessageToServer", input.value);
-	input.value = "";
+function checkChatKey(e){
+	//enter key
+	if(e.keyCode == 13){
+		e.preventDefault();
+		if(chatDisabled != null){
+			var input = document.getElementById("chat-input");
+
+			//toggle focus
+			if(chatDisabled){
+				input.focus();
+			}else{
+				input.blur();
+				//refresh key events
+				keys[37] = false;
+				keys[38] = false;
+				keys[39] = false;
+				keys[65] = false;
+				keys[68] = false;
+				keys[87] = false;
+				//send message to server
+				if(input.value != "" && input.value != null){
+					socket.emit("chatMessageToServer", input.value);
+					input.value = "";
+				}
+			}
+
+			//toggle enable/disable chat
+			chatDisabled = !chatDisabled;
+		}
+	}
+}
+
+document.body.addEventListener("click", function(e){
+	if(e.target != document.getElementById("chat-input")){
+		chatDisabled = true;
+	}else{
+		chatDisabled = false;
+	}
 });
 
 
@@ -232,6 +271,7 @@ window.addEventListener("load", function(){
 
 //key code event listener
 document.body.addEventListener("keydown", function(e) {
+    checkChatKey(e);
     keys[e.keyCode] = true;
 });
  

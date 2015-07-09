@@ -46,11 +46,7 @@ canvas{
 #chat-input{
 	margin-top:2px;
 	height:18px;
-	width:90%;
-}
-
-#chat-submit{
-	width:8%;
+	width:634px;
 }
 
 #chat-output{
