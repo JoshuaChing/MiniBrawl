@@ -48,7 +48,7 @@ function init(){
 	players = [];
 	startingX = 0;
 	startingY = 0;
-	FPS = 45;
+	FPS = 60;
 	gravity = 0.3;
 	friction = 0.8;
 	canvasWidth = 640;
@@ -363,7 +363,7 @@ function onUpKeyToServer(){
 	if (!players[i].getJumping() && players[i].getGrounded()){
 		players[i].setJumping(true);
 		players[i].setGrounded(false);
-		players[i].setVelocityY(-players[i].getSpeed()*2);
+		players[i].setVelocityY(-players[i].getSpeed()*1.8);
 	}
 }
 
