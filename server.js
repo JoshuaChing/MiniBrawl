@@ -84,6 +84,7 @@ function init(){
 		socket.on ("leftKeyToServer",onLeftKeyToServer);
 		socket.on ("rightKeyToServer",onRightKeyToServer);
 		socket.on ("upKeyToServer",onUpKeyToServer);
+		socket.on ("chatMessageToServer", onChatMessageToServer);
 		setInterval(function(){gameLoop(socket)}, 1000/FPS);
 	});
 }
@@ -223,6 +224,7 @@ function checkBlockCollision(objA, objB){
 	}
 }
 
+
 /********************************/
 /* SOCKET EVENT HANDLERS        */
 /********************************/
@@ -269,11 +271,11 @@ function onNewPlayerToServer(data){
 			break;
 		case "Knight":
 			newWidth = 25;
-			newHeight = 35;
+			newHeight = 34;
 			break;
 		case "Joe":
 			newWidth = 25;
-			newHeight = 35;
+			newHeight = 34;
 			break;
 		default:
 			newWidth = 25;
@@ -357,6 +359,11 @@ function onUpKeyToServer(){
 		players[i].setGrounded(false);
 		players[i].setVelocityY(-players[i].getSpeed()*2);
 	}
+}
+
+//when chat message is sent to server
+function onChatMessageToServer(data){
+	console.log("Message: " + data);
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/

@@ -43,6 +43,7 @@ function init(){
 	socket.on("newPlayerToClient",onNewPlayerToClient);
 	socket.on("newPositionToClient",onNewPositionToClient);
 	socket.on("removePlayerToClient",onRemovePlayerToClient);
+	socket.on("chatMessageToClient",onChatMessageToClient);
 
 	//block values
 	blocks.push({
@@ -187,6 +188,11 @@ function onRemovePlayerToClient(data){
 	}
 }
 
+//chat message to client
+function onChatMessageToClient(data){
+	
+}
+
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
 
 //returns index by id
@@ -198,6 +204,18 @@ function searchIndexById(id){
 	}
 	return -1;
 }
+
+
+/********************************/
+/* CHAT                         */
+/********************************/
+
+//chat submit listener
+document.getElementById("chat-submit").addEventListener("click", function(){
+	var input = document.getElementById("chat-input");
+	socket.emit("chatMessageToServer", input.value);
+	input.value = "";
+});
 
 
 /********************************/
@@ -219,7 +237,6 @@ document.body.addEventListener("keydown", function(e) {
 document.body.addEventListener("keyup", function(e) {
     keys[e.keyCode] = false;
 });
-
 
 //login button event listener - GAME STARTS HERE
 document.getElementById("gameLogin-start").addEventListener("click",function(){
