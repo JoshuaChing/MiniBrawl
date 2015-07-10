@@ -57,16 +57,23 @@ function init(){
 	});
 
 	blocks.push({
-		x:40,
+		x:-50,
 		y:canvasHeight-100,
-		width:150,
+		width:200,
 		height:20
 	});
 
 	blocks.push({
-		x:canvasWidth-190,
+		x:canvasWidth-150,
 		y:canvasHeight-100,
-		width:150,
+		width:200,
+		height:20
+	});
+
+	blocks.push({
+		x:canvasWidth/2-100,
+		y:canvasHeight-150,
+		width:200,
 		height:20
 	});
 
@@ -136,6 +143,13 @@ function updatePhysics(){
 		//set grounded
 		if(players[i].getGrounded()){
 			players[i].setVelocityY(0);
+		}
+
+		//wrap map
+		if(players[i].getX() <= 0 - players[i].getWidth()){
+			players[i].setX(canvasWidth - 5);
+		}else if(players[i].getX() >= canvasWidth){
+			players[i].setX(0 - players[i].getWidth() + 5);
 		}
 
 		//set position

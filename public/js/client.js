@@ -58,16 +58,23 @@ function init(){
 	});
 
 	blocks.push({
-		x:40,
+		x:0,
 		y:height-100,
 		width:150,
 		height:20
 	});
 
 	blocks.push({
-		x:width-190,
+		x:width-150,
 		y:height-100,
 		width:150,
+		height:20
+	});
+
+	blocks.push({
+		x:(width/2) - 100,
+		y:height-150,
+		width:200,
 		height:20
 	});
 
