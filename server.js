@@ -42,7 +42,7 @@ function init(){
 	players = [];
 	startingX = 0;
 	startingY = 0;
-	FPS = 60;
+	FPS = 45;
 	gravity = 0.3;
 	friction = 0.8;
 	canvasWidth = 640;
