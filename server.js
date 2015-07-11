@@ -42,8 +42,8 @@ function init(){
 	players = [];
 	startingX = 25;
 	startingY = -30;
-	FPS = 60;
-	gravity = 0.3;
+	FPS = 45;
+	gravity = 0.2;
 	friction = 0.8;
 	canvasWidth = 640;
 	canvasHeight = 350;
@@ -184,7 +184,7 @@ function updatePhysics(){
 		if (players[i].getJumpingClicked() && !players[i].getJumping() && players[i].getGrounded()){
 			players[i].setJumping(true);
 			players[i].setGrounded(false);
-			players[i].setVelocityY(-players[i].getSpeed()*1.8);
+			players[i].setVelocityY(-players[i].getSpeed()*2);
 		}
 
 		//set grounded
