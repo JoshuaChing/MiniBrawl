@@ -50,6 +50,8 @@ function init(){
 	socket.on("chatMessageToClient",onChatMessageToClient);
 
 	//block values
+
+	//base block
 	blocks.push({
 		x:0,
 		y:height-20,
@@ -57,27 +59,64 @@ function init(){
 		height:20
 	});
 
+	//3 mid plats
 	blocks.push({
 		x:0,
-		y:height-100,
+		y:height-90,
 		width:150,
 		height:20
 	});
 
 	blocks.push({
 		x:width-150,
-		y:height-100,
+		y:height-90,
 		width:150,
 		height:20
 	});
 
 	blocks.push({
-		x:(width/2) - 100,
-		y:height-150,
-		width:200,
+		x:(width/2) - 115,
+		y:height-160,
+		width:230,
 		height:20
 	});
 
+	//left corner stairs
+	blocks.push({
+		x:0,
+		y:20,
+		width:20,
+		height:30
+	});
+
+	blocks.push({
+		x:0,
+		y:50,
+		width:60,
+		height:40
+	});
+
+	blocks.push({
+		x:0,
+		y:90,
+		width:100,
+		height:40
+	});
+
+	blocks.push({
+		x:0,
+		y:130,
+		width:150,
+		height:20
+	});
+
+	//right corner plats
+	blocks.push({
+		x:width - 150,
+		y: 50,
+		width:130,
+		height:20,
+	});
 }
 
 

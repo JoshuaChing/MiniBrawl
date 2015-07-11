@@ -40,15 +40,17 @@ var blocks =[];
 /********************************/
 function init(){
 	players = [];
-	startingX = 0;
-	startingY = 0;
+	startingX = 25;
+	startingY = -30;
 	FPS = 60;
-	gravity = 0.2;
+	gravity = 0.3;
 	friction = 0.8;
 	canvasWidth = 640;
 	canvasHeight = 350;
 
 	//block values
+
+	//base block
 	blocks.push({
 		x:0,
 		y:canvasHeight-20,
@@ -56,25 +58,63 @@ function init(){
 		height:20
 	});
 
+	//3 mid plats
 	blocks.push({
 		x:-50,
-		y:canvasHeight-100,
+		y:canvasHeight-90,
 		width:200,
 		height:20
 	});
 
 	blocks.push({
 		x:canvasWidth-150,
-		y:canvasHeight-100,
+		y:canvasHeight-90,
 		width:200,
 		height:20
 	});
 
 	blocks.push({
-		x:canvasWidth/2-100,
-		y:canvasHeight-150,
-		width:200,
+		x:canvasWidth/2-115,
+		y:canvasHeight-160,
+		width:230,
 		height:20
+	});
+
+	//left corner stairs
+	blocks.push({
+		x:0,
+		y:20,
+		width:20,
+		height:30
+	});
+
+	blocks.push({
+		x:0,
+		y:50,
+		width:60,
+		height:40
+	});
+
+	blocks.push({
+		x:0,
+		y:90,
+		width:100,
+		height:40
+	});
+
+	blocks.push({
+		x:0,
+		y:130,
+		width:150,
+		height:20
+	});
+
+	//right corner plats
+	blocks.push({
+		x:canvasWidth - 150,
+		y: 50,
+		width:130,
+		height:20,
 	});
 
 	//called for every new socket connection
@@ -144,7 +184,7 @@ function updatePhysics(){
 		if (players[i].getJumpingClicked() && !players[i].getJumping() && players[i].getGrounded()){
 			players[i].setJumping(true);
 			players[i].setGrounded(false);
-			players[i].setVelocityY(-players[i].getSpeed()*2);
+			players[i].setVelocityY(-players[i].getSpeed()*1.8);
 		}
 
 		//set grounded
