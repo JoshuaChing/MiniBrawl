@@ -164,15 +164,13 @@ function drawPlayers(){
 /* DRAW GAME MAP                */
 /********************************/
 function drawMap(){
-	ctx.clearRect(0,0,width,height);
-	ctx.fillStyle="#87CEEB"; //sky blue
-	ctx.fillRect(0,0,width,height);
-
 	ctx.fillStyle="green";
-	ctx.fill();
+	ctx.beginPath();
 	for (var i=0; i<blocks.length;i++){
 		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,blocks[i].height);
 	}
+	ctx.closePath();
+	ctx.fill();
 }
 
 
@@ -180,8 +178,8 @@ function drawMap(){
 /* GAME ANIMATION LOOP          */
 /********************************/
 function update(){
+	ctx.clearRect(0,0,width,height);
 	drawMap();
-	localPlayerMovement();
 	drawPlayers();
 	requestAnimationFrame(update);
 }
@@ -340,6 +338,8 @@ document.getElementById("gameLogin-start").addEventListener("click",function(){
 		//start game
 		init();
   		update();
+		//keep game state out of animation loop
+		setInterval(localPlayerMovement, 10);
   	}
 });
 
