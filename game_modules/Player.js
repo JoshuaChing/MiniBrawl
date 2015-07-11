@@ -8,6 +8,7 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 	var velocityY = 0;
 	var speed = 4;
 	var jumping = false;
+	var jumpingClicked = false;
 	var grounded = false;
 
 	//	- 	- sprite variables
@@ -82,6 +83,14 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 
 	function setJumping(state){
 		jumping = state;
+	}
+
+	function getJumpingClicked(){
+		return jumpingClicked;
+	}
+
+	function setJumpingClicked(state){
+		jumpingClicked = state;
 	}
 
 	function getGrounded(){
@@ -166,6 +175,8 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		setSpeed : setSpeed,
 		getJumping : getJumping,
 		setJumping : setJumping,
+		getJumpingClicked : getJumpingClicked,
+		setJumpingClicked : setJumpingClicked,
 		getGrounded : getGrounded,
 		setGrounded : setGrounded,
 		getCharacter : getCharacter,

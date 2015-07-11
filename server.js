@@ -140,6 +140,13 @@ function updatePhysics(){
 			}
 		}
 
+		//jumping logic
+		if (players[i].getJumpingClicked() && !players[i].getJumping() && players[i].getGrounded()){
+			players[i].setJumping(true);
+			players[i].setGrounded(false);
+			players[i].setVelocityY(-players[i].getSpeed()*2);
+		}
+
 		//set grounded
 		if(players[i].getGrounded()){
 			players[i].setVelocityY(0);
@@ -156,12 +163,8 @@ function updatePhysics(){
 		players[i].setX(players[i].getX() + players[i].getVelocityX());
 		players[i].setY(players[i].getY() + players[i].getVelocityY());
 
-		//make sure player is not through the ground
-		if(players[i].getY() >= (canvasHeight - 20 - players[i].getHeight())){
-			players[i].setY(canvasHeight - 20 - players[i].getHeight());
-			players[i].setGrounded(true);
-			players[i].setJumping(false);
-		}
+		//reset jumping clicked
+		players[i].setJumpingClicked(false);
 	}
 }
 
@@ -204,7 +207,7 @@ function checkBlockCollision(objA, objB){
             } else {
             	//collision on objA bottom
                 colDir = "b";
-                objA.setY(objA.getY() - oY);
+                objA.setY(objA.getY() - oY/2);
             }
         } else {
             if (vX > 0) {
@@ -368,11 +371,7 @@ function onUpKeyToServer(){
 		return;	
 	}
 	//jumping logic
-	if (!players[i].getJumping() && players[i].getGrounded()){
-		players[i].setJumping(true);
-		players[i].setGrounded(false);
-		players[i].setVelocityY(-players[i].getSpeed()*2);
-	}
+	players[i].setJumpingClicked(true);
 }
 
 //when chat message is sent to server
