@@ -424,7 +424,6 @@ function onNewPlayerToServer(data){
 		default:
 			newWidth = 25;
 			newHeight = 32;
-
 	}
 
 	//create new player object
@@ -449,7 +448,8 @@ function onNewPlayerToServer(data){
 		this.emit("projectileToClient", {
 			id: projectiles[i].getId(),
 			x: projectiles[i].getX(),
-			y: projectiles[i].getY()
+			y: projectiles[i].getY(),
+			playerId: projectiles[i].getPlayerId()
 		});
 	}
 	
@@ -559,7 +559,8 @@ function onProjectileToServer(data){
 	io.sockets.emit("projectileToClient",{
 		id: newProjectile.getId(),
 		x: newProjectile.getX(),
-		y: newProjectile.getY()
+		y: newProjectile.getY(),
+		playerId : newProjectile.getPlayerId()
 	});
 }
 

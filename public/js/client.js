@@ -203,9 +203,27 @@ function drawPlayers(){
 /* DRAW PROJECTILES             */
 /********************************/
 function drawProjectiles(){
-	ctx.fillStyle="red";
 	ctx.beginPath();
 	for (var i=0; i<projectiles.length;i++){
+		//determine projectile style
+		var index = searchIndexById(players, projectiles[i].playerId);
+		var character = (index==-1) ? "default" : players[index].character;
+		switch(character){
+			case "BlackNinja":
+				ctx.fillStyle = "black";
+				break;
+			case "WhiteNinja":
+				ctx.fillStyle = "blue";
+				break;
+			case "Knight":
+				ctx.fillStyle = "red";
+				break;
+			case "Joe":
+				ctx.fillStyle = "#472400";
+				break;
+			default:
+				ctx.fillStyle="black";
+		}
 		ctx.rect(projectiles[i].x,projectiles[i].y,5,5);
 	}
 	ctx.closePath();
@@ -217,7 +235,7 @@ function drawProjectiles(){
 /* DRAW GAME MAP                */
 /********************************/
 function drawMap(){
-	ctx.fillStyle="#333333";
+	ctx.fillStyle="#595959";
 	ctx.beginPath();
 	for (var i=0; i<blocks.length;i++){
 		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,blocks[i].height);
@@ -303,7 +321,7 @@ function onChatMessageToClient(data){
 
 //projectile to client
 function onProjectileToClient(data){
-	var newProjectile = new Projectile(data.x, data.y, data.id);
+	var newProjectile = new Projectile(data.x, data.y, data.id, data.playerId);
 	projectiles.push(newProjectile);
 }
 
