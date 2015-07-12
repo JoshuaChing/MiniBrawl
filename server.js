@@ -197,6 +197,7 @@ function updatePhysics(){
 						players[i].setY(players[i].getY() - projectiles[j].getVelocityY()*0.5);
 						players[i].setHealth(players[i].getHealth() - 1);
 					}
+					checkDeath(players[i], projectiles[j]);
 				}
 			}catch(err){
 				console.log("projectile collision: " + err);
@@ -347,6 +348,22 @@ function checkProjectileCollision(objA, objB){
 	}
 
 	return false;
+}
+
+//check if player dead
+function checkDeath(player, projectile){
+	if(player.getHealth() <= 0){
+		//get name of slayer
+		var index = searchIndexById(projectile.getPlayerId());
+		if(index == -1){
+			sendMessageToAll(player.getUsername() + " has been slained.");
+		}else{
+			sendMessageToAll(player.getUsername() + " has been slained by " + players[index].getUsername() + ".");
+		}
+		player.setX(startingX);
+		player.setY(startingY);
+		player.setHealth(player.getMaxHealth());
+	}
 }
 
 /********************************/
@@ -504,9 +521,7 @@ function onChatMessageToServer(data){
 		console.log(this.id + ": id not found");
 		return;	
 	}
-	var message = players[i].getUsername() + ": " + data;
-	io.sockets.emit("chatMessageToClient", message);
-	console.log(message);
+	sendMessageToAll(players[i].getUsername() + ": " + data);
 }
 
 //when projectile direction is sent to server
@@ -558,6 +573,12 @@ function searchIndexById(id){
 		}	
 	}
 	return -1;
+}
+
+//send message to all
+function sendMessageToAll(message){
+	console.log(message);
+	io.sockets.emit("chatMessageToClient", message);
 }
 
 

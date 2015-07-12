@@ -10,7 +10,7 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 	var jumping = false;
 	var jumpingClicked = false;
 	var grounded = false;
-	var maxHealth = 50;
+	var maxHealth = 30;
 	var health = maxHealth;
 
 	//	- 	- sprite variables
