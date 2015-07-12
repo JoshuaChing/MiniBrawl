@@ -174,6 +174,15 @@ function updatePhysics(){
 		projectiles[i].setY(projectiles[i].getY() + projectiles[i].getVelocityY());
 	}
 
+	//remove projectiles that are off screen
+	var index = projectiles.length;
+	while(index--){
+		if(projectiles[index].getX() <= -100 || projectiles[index].getX() >= (canvasWidth + 100) || projectiles[index].getY() <= - 100 || projectiles[index].getY() >= (canvasHeight + 100)){
+			io.sockets.emit("projectileRemoveToClient", projectiles[index].getId());
+			projectiles.splice(index,1);
+		}
+	}
+
 	//calculate positions
 	for (var i = 0; i < players.length; i++){
 		//apply friction and gravity

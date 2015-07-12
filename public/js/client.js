@@ -51,6 +51,7 @@ function init(){
 	socket.on("chatMessageToClient",onChatMessageToClient);
 	socket.on("projectileToClient",onProjectileToClient);
 	socket.on("projectilePositionToClient",onProjectilePositionToClient);
+	socket.on("projectileRemoveToClient", onProjectileRemoveToClient);
 
 	//block values
 
@@ -290,6 +291,19 @@ function onProjectilePositionToClient(data){
 		projectiles[index].x=data.x;
 		projectiles[index].y=data.y;
 	}catch(e){console.log(e)}
+}
+
+//projectile remove to client
+function onProjectileRemoveToClient(data){
+	var index = searchIndexById(projectiles, data);
+
+	//if id isn't found
+	if (index == -1){
+		console.log(this.id + ": id not found");
+		return;
+	}
+
+	projectiles.splice(index,1);
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
