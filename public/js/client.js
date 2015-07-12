@@ -18,6 +18,7 @@ var socketio,
 	height,
 	keys=[],
 	players=[],
+	projectiles=[],
 	images={},
 	setCharacter = "BlackNinja",
 	iconSelected = 0,
@@ -48,6 +49,8 @@ function init(){
 	socket.on("newPositionToClient",onNewPositionToClient);
 	socket.on("removePlayerToClient",onRemovePlayerToClient);
 	socket.on("chatMessageToClient",onChatMessageToClient);
+	socket.on("projectileToClient",onProjectileToClient);
+	socket.on("projectilePositionToClient",onProjectilePositionToClient);
 
 	//block values
 
@@ -121,7 +124,7 @@ function init(){
 
 
 /********************************/
-/* LOCAL PLAYER MOVEMENT        */
+/* LOCAL PLAYER CONTROLS        */
 /********************************/
 function localPlayerMovement(){
 	var checkMovement = false;
@@ -144,6 +147,20 @@ function localPlayerMovement(){
 	}
 }
 
+//send projectile positions to server
+function sendProjectilePositions(posX, posY){
+	socket.emit("projectileToServer", {
+		x: posX,
+		y: posY
+	});
+}
+
+//click listener on canvas
+document.getElementById('canvas').onmousedown = function(event){
+	sendProjectilePositions((event.pageX - canvas.offsetLeft), (event.pageY - canvas.offsetTop))
+	return false;
+};
+
 
 /********************************/
 /* DRAW ALL PLAYERS             */
@@ -157,6 +174,20 @@ function drawPlayers(){
 		}catch(e){console.log(e)}
 		ctx.fillText(players[i].username,players[i].x,players[i].y-10);
 	}
+}
+
+
+/********************************/
+/* DRAW PROJECTILES             */
+/********************************/
+function drawProjectiles(){
+	ctx.fillStyle="red";
+	ctx.beginPath();
+	for (var i=0; i<projectiles.length;i++){
+		ctx.rect(projectiles[i].x,projectiles[i].y,5,5);
+	}
+	ctx.closePath();
+	ctx.fill();
 }
 
 
@@ -181,6 +212,7 @@ function update(){
 	ctx.clearRect(0,0,width,height);
 	drawMap();
 	drawPlayers();
+	drawProjectiles();
 	requestAnimationFrame(update);
 }
 
@@ -208,7 +240,7 @@ function onNewPlayerToClient(data){
 
 //new position of remote players to client
 function onNewPositionToClient(data){
-	var index = searchIndexById(data.id);
+	var index = searchIndexById(players, data.id);
 	try{
 		players[index].x=data.x;
 		players[index].y=data.y;
@@ -221,7 +253,7 @@ function onNewPositionToClient(data){
 
 //remove player by id on client
 function onRemovePlayerToClient(data){
-	var index = searchIndexById(data.id);
+	var index = searchIndexById(players, data.id);
 
 	//if id isn't found
 	if (index == -1){
@@ -245,12 +277,27 @@ function onChatMessageToClient(data){
 	chatOutput.scrollTop = chatOutput.scrollHeight;
 }
 
+//projectile to client
+function onProjectileToClient(data){
+	var newProjectile = new Projectile(data.x, data.y, data.id);
+	projectiles.push(newProjectile);
+}
+
+//projectile position to client
+function onProjectilePositionToClient(data){
+	var index = searchIndexById(projectiles , data.id);
+	try{
+		projectiles[index].x=data.x;
+		projectiles[index].y=data.y;
+	}catch(e){console.log(e)}
+}
+
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
 
 //returns index by id
-function searchIndexById(id){
-	for (var i = 0; i < players.length; i++){
-		if (players[i].id == id){
+function searchIndexById(obj, id){
+	for (var i = 0; i < obj.length; i++){
+		if (obj[i].id == id){
 			return i;
 		}	
 	}

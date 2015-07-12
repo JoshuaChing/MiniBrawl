@@ -25,6 +25,9 @@ server.listen(port, function(){
 /********************************/
 var Player = require("./game_modules/Player").Player;
 var players;
+var Projectile = require("./game_modules/Projectile").Projectile;
+var projectiles;
+var projectilesCount;
 var startingX;
 var startingY;
 var FPS;
@@ -40,6 +43,8 @@ var blocks =[];
 /********************************/
 function init(){
 	players = [];
+	projectiles = [];
+	projectilesCount = 0;
 	startingX = 25;
 	startingY = -30;
 	FPS = 60;
@@ -126,6 +131,7 @@ function init(){
 		socket.on ("rightKeyToServer",onRightKeyToServer);
 		socket.on ("upKeyToServer",onUpKeyToServer);
 		socket.on ("chatMessageToServer", onChatMessageToServer);
+		socket.on ("projectileToServer", onProjectileToServer);
 		setInterval(function(){gameLoop(socket)}, 1000/FPS);
 	});
 }
@@ -162,6 +168,12 @@ function updateSprites(){
 
 //update physics
 function updatePhysics(){
+	//calculate projectile positions
+	for(var i = 0; i < projectiles.length; i++){
+		projectiles[i].setX(projectiles[i].getX() + projectiles[i].getVelocityX());
+		projectiles[i].setY(projectiles[i].getY() + projectiles[i].getVelocityY());
+	}
+
 	//calculate positions
 	for (var i = 0; i < players.length; i++){
 		//apply friction and gravity
@@ -210,6 +222,15 @@ function updatePhysics(){
 
 //send updates to clients
 function sendGameState(socket){
+	//send projectiles to clients
+	for (var i = 0; i < projectiles.length; i++){
+		socket.emit('projectilePositionToClient',{
+			id: projectiles[i].getId(),
+			x: projectiles[i].getX(),
+			y: projectiles[i].getY()
+		});
+	}
+
 	//send new positions to clients
 	for (var i = 0; i < players.length; i++){
     	socket.emit('newPositionToClient',{
@@ -221,7 +242,7 @@ function sendGameState(socket){
 			frame :	players[i].getFrame(),
 			action : players[i].getAction()
 		});
-   	} 
+	}
 }
 
 /***GAME LOOP - HELPER FUNCTIONS***/
@@ -353,6 +374,15 @@ function onNewPlayerToServer(data){
 			id: existingPlayer.getId()
 		});
 	}
+
+	//send existing projectiles to new client
+	for(var i = 0; i < projectiles.length; i++){
+		this.emit("projectileToClient", {
+			id: projectiles[i].getId(),
+			x: projectiles[i].getX(),
+			y: projectiles[i].getY()
+		});
+	}
 	
 	//send new player to all other clients
 	this.broadcast.emit("newPlayerToClient",{
@@ -425,6 +455,45 @@ function onChatMessageToServer(data){
 	var message = players[i].getUsername() + ": " + data;
 	io.sockets.emit("chatMessageToClient", message);
 	console.log(message);
+}
+
+//when projectile direction is sent to server
+function onProjectileToServer(data){
+	var i = searchIndexById(this.id);
+	//if id isn't found
+	if (i == -1){
+		console.log(this.id + ": id not found");
+		return;
+	}
+
+	//calculate veloctiy of projectile
+	var startX = players[i].getX() + players[i].getWidth()/2;
+	var startY = players[i].getY() + players[i].getHeight()/2;
+	var xDir = (data.x - startX);
+	var yDir = (data.y - startY);
+	var magnitude = Math.sqrt(xDir * xDir + yDir * yDir);
+	var xVel = (xDir / magnitude) * 12;
+	var yVel = (yDir / magnitude) * 12;
+
+	//create new player object
+	var newProjectile = new Projectile(startX, startY, xVel, yVel, projectilesCount);
+
+	//increment projectiles counter
+	if(projectilesCount >=1000){
+		projectilesCount = 0;
+	}else{
+		projectilesCount++;
+	}
+
+	//add new player to server list
+	projectiles.push(newProjectile);
+
+	//send new projectile to all clients
+	io.sockets.emit("projectileToClient",{
+		id: newProjectile.getId(),
+		x: newProjectile.getX(),
+		y: newProjectile.getY()
+	});
 }
 
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
