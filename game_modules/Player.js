@@ -10,6 +10,8 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 	var jumping = false;
 	var jumpingClicked = false;
 	var grounded = false;
+	var maxHealth = 50;
+	var health = maxHealth;
 
 	//	- 	- sprite variables
 	var character = startCharacter;
@@ -101,6 +103,22 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		grounded = state;
 	}
 
+	function getMaxHealth(){
+		return maxHealth;
+	}
+
+	function setMaxHealth(newMaxHealth){
+		maxHealth = newMaxHealth;
+	}
+
+	function getHealth(){
+		return health;
+	}
+
+	function setHealth(newHealth){
+		health = newHealth;
+	}
+
 	// -	-	sprite variables
 	function getCharacter(){
 		return character;
@@ -179,6 +197,10 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		setJumpingClicked : setJumpingClicked,
 		getGrounded : getGrounded,
 		setGrounded : setGrounded,
+		getMaxHealth : getMaxHealth,
+		setMaxHealth : setMaxHealth,
+		getHealth : getHealth,
+		setHealth : setHealth,
 		getCharacter : getCharacter,
 		setCharacter : setCharacter,
 		getDirection : getDirection,

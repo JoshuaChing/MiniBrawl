@@ -185,6 +185,22 @@ function updatePhysics(){
 
 	//calculate positions
 	for (var i = 0; i < players.length; i++){
+		//check projectiles collision
+		for(var j = 0; j < projectiles.length; j++){
+			try{
+				if(checkProjectileCollision(players[i], projectiles[j])){
+					if(players[i].getHealth() > 0){
+						//recoil and decrement health
+						players[i].setX(players[i].getX() - projectiles[j].getVelocityX()*0.5);
+						players[i].setY(players[i].getY() - projectiles[j].getVelocityY()*0.5);
+						players[i].setHealth(players[i].getHealth() - 1);
+					}
+				}
+			}catch(err){
+				console.log("projectile collision: " + err);
+			}
+		}
+
 		//apply friction and gravity
 		players[i].setVelocityX(players[i].getVelocityX()*friction);
 		players[i].setVelocityY(players[i].getVelocityY()+gravity);
@@ -249,12 +265,16 @@ function sendGameState(socket){
 			character : players[i].getCharacter(),
 			direction : players[i].getDirection(),
 			frame :	players[i].getFrame(),
-			action : players[i].getAction()
+			action : players[i].getAction(),
+			health : players[i].getHealth(),
+			maxHealth : players[i].getMaxHealth()
 		});
 	}
 }
 
 /***GAME LOOP - HELPER FUNCTIONS***/
+
+//block collision
 function checkBlockCollision(objA, objB){
 	//get vectors to check against (center to center)
 	var vX = (objA.getX() + (objA.getWidth()/2)) - (objB.x + (objB.width/2));
@@ -305,6 +325,27 @@ function checkBlockCollision(objA, objB){
 	}
 }
 
+//projectile collision
+function checkProjectileCollision(objA, objB){
+	//check if it is own user
+	if(objA.getId() == objB.getPlayerId()){
+		return false;
+	}
+
+	//get vectors to check against (center to center)
+	var vX = (objA.getX() + (objA.getWidth()/2)) - (objB.getX() + (5/2));
+	var vY = (objA.getY() + (objA.getHeight()/2)) - (objB.getY() + (5/2));
+	// half widths and half heights
+	var hWidths = (objA.getWidth()/2) + (5/2);
+	var hHeights = (objA.getHeight()/2) + (5/2);
+
+	//check for collision against vectors and half width/heights
+	if(Math.abs(vX) < hWidths && Math.abs(vY) < hHeights){
+		return true;
+	}
+
+	return false;
+}
 
 /********************************/
 /* SOCKET EVENT HANDLERS        */
@@ -485,7 +526,7 @@ function onProjectileToServer(data){
 	var yVel = (yDir / magnitude) * 12;
 
 	//create new player object
-	var newProjectile = new Projectile(startX, startY, xVel, yVel, projectilesCount);
+	var newProjectile = new Projectile(startX, startY, xVel, yVel, projectilesCount, this.id);
 
 	//increment projectiles counter
 	if(projectilesCount >=1000){

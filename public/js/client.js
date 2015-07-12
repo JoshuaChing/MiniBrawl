@@ -167,13 +167,34 @@ document.getElementById('canvas').onmousedown = function(event){
 /* DRAW ALL PLAYERS             */
 /********************************/
 function drawPlayers(){
-	ctx.font = "10px Verdana";
-	ctx.fillStyle="#000000";
 	for (var i = 0; i < players.length;i++){
 		try{
 			ctx.drawImage(images[players[i].character+players[i].action+players[i].direction+players[i].frame],players[i].x,players[i].y);
 		}catch(e){console.log(e)}
-		ctx.fillText(players[i].username,players[i].x,players[i].y-10);
+		ctx.font = "10px Verdana";
+		ctx.fillStyle="#000000";
+		ctx.fillText(players[i].username, players[i].x, players[i].y+45);
+
+		//draw health bar background
+		ctx.fillStyle="#000000";
+		ctx.beginPath();
+		ctx.rect(players[i].x - 3, players[i].y - 10, 30, 7);
+		ctx.fill();
+		ctx.closePath();
+
+		//draw health bar
+		var healthRatio = players[i].health/players[i].maxHealth;
+		if(healthRatio >= 0.50){
+			ctx.fillStyle="green";
+		}else if(healthRatio >= 0.25){
+			ctx.fillStyle="orange";
+		}else{
+			ctx.fillStyle="red";
+		}
+		ctx.beginPath();
+		ctx.rect(players[i].x - 2, players[i].y - 9, healthRatio*28, 5);
+		ctx.fill();
+		ctx.closePath();
 	}
 }
 
@@ -196,7 +217,7 @@ function drawProjectiles(){
 /* DRAW GAME MAP                */
 /********************************/
 function drawMap(){
-	ctx.fillStyle="green";
+	ctx.fillStyle="#333333";
 	ctx.beginPath();
 	for (var i=0; i<blocks.length;i++){
 		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,blocks[i].height);
@@ -249,6 +270,8 @@ function onNewPositionToClient(data){
 		players[index].direction=data.direction;
 		players[index].frame=data.frame;
 		players[index].action=data.action;
+		players[index].health=data.health;
+		players[index].maxHealth=data.maxHealth;
 	}catch(e){console.log(e)}
 }
 

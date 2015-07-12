@@ -1,10 +1,11 @@
-var Projectile = function(startX, startY, startVelX, startVelY, initId){
+var Projectile = function(startX, startY, startVelX, startVelY, initId, initPlayerId){
 
 	var x = startX;
 	var y = startY;
 	var velX = startVelX;
 	var velY = startVelY;
 	var id = initId;
+	var playerId = initPlayerId;
 
 	//getters and setters
 	function getX(){
@@ -47,6 +48,14 @@ var Projectile = function(startX, startY, startVelX, startVelY, initId){
 		id = newId;
 	}
 
+	function getPlayerId(){
+		return playerId;
+	}
+
+	function setPlayerId(newPlayerId){
+		playerId = newPlayerId;
+	}
+
 	return{
 		getX : getX,
 		setX : setX,
@@ -57,7 +66,9 @@ var Projectile = function(startX, startY, startVelX, startVelY, initId){
 		getVelocityY : getVelocityY,
 		setVelocityY : setVelocityY,
 		getId : getId,
-		setId : setId 
+		setId : setId,
+		getPlayerId : getPlayerId,
+		setPlayerId : setPlayerId
 	}
 
 };
