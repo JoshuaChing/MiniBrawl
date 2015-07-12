@@ -132,8 +132,10 @@ function init(){
 		socket.on ("upKeyToServer",onUpKeyToServer);
 		socket.on ("chatMessageToServer", onChatMessageToServer);
 		socket.on ("projectileToServer", onProjectileToServer);
-		setInterval(function(){gameLoop(socket)}, 1000/FPS);
 	});
+
+	//init game loop
+	setInterval(function(){gameLoop()}, 1000/FPS);
 }
 
 
@@ -142,10 +144,10 @@ function init(){
 /********************************/
 
 //main game loop
-function gameLoop(socket){
+function gameLoop(){
 	updatePhysics();
 	updateSprites();
-	sendGameState(socket);
+	sendGameState();
 }
 
 //update sprite images
@@ -246,10 +248,10 @@ function updatePhysics(){
 }
 
 //send updates to clients
-function sendGameState(socket){
+function sendGameState(){
 	//send projectiles to clients
 	for (var i = 0; i < projectiles.length; i++){
-		socket.emit('projectilePositionToClient',{
+		io.sockets.emit('projectilePositionToClient',{
 			id: projectiles[i].getId(),
 			x: projectiles[i].getX(),
 			y: projectiles[i].getY()
@@ -258,7 +260,7 @@ function sendGameState(socket){
 
 	//send new positions to clients
 	for (var i = 0; i < players.length; i++){
-    	socket.emit('newPositionToClient',{
+		io.sockets.emit('newPositionToClient',{
 			id: players[i].getId(),
 			x: players[i].getX(),
 			y: players[i].getY(),
