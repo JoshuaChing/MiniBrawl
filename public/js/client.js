@@ -18,6 +18,7 @@ var socketio,
 	height,
 	keys=[],
 	players=[],
+	playersRanking=[],
 	projectiles=[],
 	images={},
 	setCharacter = "BlackNinja",
@@ -52,6 +53,7 @@ function init(){
 	socket.on("projectileToClient",onProjectileToClient);
 	socket.on("projectilePositionToClient",onProjectilePositionToClient);
 	socket.on("projectileRemoveToClient", onProjectileRemoveToClient);
+	socket.on("newScoreToClient", onNewScoreToClient);
 
 	//block values
 
@@ -271,11 +273,11 @@ function onClientConnect(){
 
 //add new player to client's list
 function onNewPlayerToClient(data){
-	var newPlayer = new Player(data.username, data.x, data.y, data.id);
+	var newPlayer = new Player(data.username, data.x, data.y, data.id, data.score);
 	players.push(newPlayer);
+	playersRanking.push(newPlayer);
 
-	var playersContainer = document.getElementById("playersList");
-	playersContainer.innerHTML = (playersContainer.innerHTML + "<br/>" + data.username);
+	updatePlayersRanking();
 }
 
 //new position of remote players to client
@@ -296,20 +298,18 @@ function onNewPositionToClient(data){
 //remove player by id on client
 function onRemovePlayerToClient(data){
 	var index = searchIndexById(players, data.id);
+	var rankingIndex = searchIndexById(playersRanking, data.id);
 
 	//if id isn't found
-	if (index == -1){
+	if (index == -1 || rankingIndex == -1){
 		console.log(this.id + ": id not found");
 		return;	
 	}
 
 	players.splice(index,1);
+	playersRanking.splice(rankingIndex,1);
 
-	var playersContainer = document.getElementById("playersList");
-	playersContainer.innerHTML = ("<span id='playersTitle'>Users Connected:</span>");
-	for (var i = 0; i < players.length; i++){
-		playersContainer.innerHTML = (playersContainer.innerHTML + "<br/>" + players[i].username);
-	}
+	updatePlayersRanking();
 }
 
 //chat message to client
@@ -347,6 +347,22 @@ function onProjectileRemoveToClient(data){
 	projectiles.splice(index,1);
 }
 
+//score update to client
+function onNewScoreToClient(data){
+	var index = searchIndexById(playersRanking, data.id);
+
+	//if id isn't found
+	if (index == -1){
+		console.log(this.id + ": id not found");
+		return;
+	}
+
+	//set new score
+	playersRanking[index].score = data.score;
+
+	updatePlayersRanking();
+}
+
 /***SOCKET EVENT HANDLERS - HELPER FUNCTIONS***/
 
 //returns index by id
@@ -357,6 +373,28 @@ function searchIndexById(obj, id){
 		}	
 	}
 	return -1;
+}
+
+//displays players ranking
+function updatePlayersRanking(){
+	//simple sort
+	for(var i = 0; i < playersRanking.length - 1; i++){
+		var maxIndex = i;
+		for(var j = i + 1; j < playersRanking.length; j++){
+			if(playersRanking[j].score > playersRanking[maxIndex].score){
+				maxIndex = j;
+			}
+		}
+		var temp = playersRanking[i];
+		playersRanking[i] = playersRanking[maxIndex];
+		playersRanking[maxIndex] = temp;
+	}
+
+	var playersContainer = document.getElementById("playersList-content");
+	playersContainer.innerHTML = "";
+	for (var i = 0; i < players.length; i++){
+		playersContainer.innerHTML = (playersContainer.innerHTML + playersRanking[i].score + " " + playersRanking[i].username + "<br>");
+	}
 }
 
 

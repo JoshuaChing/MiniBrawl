@@ -353,16 +353,23 @@ function checkProjectileCollision(objA, objB){
 //check if player dead
 function checkDeath(player, projectile){
 	if(player.getHealth() <= 0){
-		//get name of slayer
+		//get name of slayer and send message
 		var index = searchIndexById(projectile.getPlayerId());
 		if(index == -1){
 			sendMessageToAll(player.getUsername() + " has been slained.");
 		}else{
 			sendMessageToAll(player.getUsername() + " has been slained by " + players[index].getUsername() + ".");
 		}
+		//death reset
 		player.setX(startingX);
 		player.setY(startingY);
 		player.setHealth(player.getMaxHealth());
+		//handle score
+		players[index].addScore(true,1);
+		io.sockets.emit("newScoreToClient", {
+			score: players[index].getScore(),
+			id : players[index].getId()
+		});
 	}
 }
 
@@ -439,7 +446,8 @@ function onNewPlayerToServer(data){
 			username: existingPlayer.getUsername(),
 			x: existingPlayer.getX(),
 			y: existingPlayer.getY(),
-			id: existingPlayer.getId()
+			id: existingPlayer.getId(),
+			score: existingPlayer.getScore()
 		});
 	}
 
@@ -458,7 +466,8 @@ function onNewPlayerToServer(data){
 		username: newPlayer.getUsername(),
 		x: newPlayer.getX(),
 		y: newPlayer.getY(),
-		id: newPlayer.getId()
+		id: newPlayer.getId(),
+		score: newPlayer.getScore()
 	});
 
 	//send message to other players

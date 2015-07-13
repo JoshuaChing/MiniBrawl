@@ -22,6 +22,8 @@ canvas{
 
 #playersList-title{
 	font-weight:bold;
+	text-align:center;
+	padding:10px;
 }
 
 #playersList{
@@ -31,7 +33,7 @@ canvas{
 	padding:10px;
 	border:1px solid #333333;
 	background-color:black;
-	color:white;
+	color:#3498db;
 }
 
 #chat{
@@ -71,7 +73,7 @@ canvas{
 }
 
 #gameLogin-background{
-	background:#ecf0f1;
+	background:#333333;
 	opacity:0.80;
 	width:100%;
 	height:100%;
@@ -81,7 +83,7 @@ canvas{
 #gameLogin-forms{
 	color:#ffffff;
 	position:absolute;
-	background:#95a5a6;
+	background:#333333;
 	padding:30px;
 	border-radius:5px;
 	margin: auto;

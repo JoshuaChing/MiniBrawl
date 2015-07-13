@@ -12,6 +12,7 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 	var grounded = false;
 	var maxHealth = 30;
 	var health = maxHealth;
+	var score = 0;
 
 	//	- 	- sprite variables
 	var character = startCharacter;
@@ -119,6 +120,14 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		health = newHealth;
 	}
 
+	function getScore(){
+		return score;
+	}
+
+	function setScore(newScore){
+		score = newScore;
+	}
+
 	// -	-	sprite variables
 	function getCharacter(){
 		return character;
@@ -176,6 +185,21 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		height = h;
 	}
 
+	//helper functions
+	function addScore(isAdd, diff){
+		if(isAdd){
+			//add score
+			score+=diff;
+		}else{
+			//subtract score
+			if(score - diff <= 0){
+				score=0;
+			}else{
+				score-=diff;
+			}
+		}
+	}
+
 	return{
 		getUsername : getUsername,
 		setUsername : setUsername,
@@ -201,6 +225,8 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		setMaxHealth : setMaxHealth,
 		getHealth : getHealth,
 		setHealth : setHealth,
+		getScore : getScore,
+		setScore : setScore,
 		getCharacter : getCharacter,
 		setCharacter : setCharacter,
 		getDirection : getDirection,
@@ -214,7 +240,8 @@ var Player = function(startUsername,startCharacter,startX,startY,initID,startWid
 		getWidth : getWidth,
 		setWidth : setWidth,
 		getHeight : getHeight,
-		setHeight : getHeight
+		setHeight : getHeight,
+		addScore : addScore,
 	}
 
 };
