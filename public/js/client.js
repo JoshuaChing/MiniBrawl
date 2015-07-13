@@ -205,8 +205,8 @@ function drawPlayers(){
 /* DRAW PROJECTILES             */
 /********************************/
 function drawProjectiles(){
-	ctx.beginPath();
 	for (var i=0; i<projectiles.length;i++){
+		ctx.beginPath();
 		//determine projectile style
 		var index = searchIndexById(players, projectiles[i].playerId);
 		var character = (index==-1) ? "default" : players[index].character;
@@ -227,9 +227,9 @@ function drawProjectiles(){
 				ctx.fillStyle="black";
 		}
 		ctx.rect(projectiles[i].x,projectiles[i].y,5,5);
+		ctx.fill();
+		ctx.closePath();
 	}
-	ctx.closePath();
-	ctx.fill();
 }
 
 
