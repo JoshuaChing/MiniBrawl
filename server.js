@@ -193,8 +193,8 @@ function updatePhysics(){
 				if(checkProjectileCollision(players[i], projectiles[j])){
 					if(players[i].getHealth() > 0){
 						//recoil and decrement health
-						players[i].setX(players[i].getX() - projectiles[j].getVelocityX()*0.5);
-						players[i].setY(players[i].getY() - projectiles[j].getVelocityY()*0.5);
+						players[i].setX(players[i].getX() + projectiles[j].getVelocityX()*0.3);
+						players[i].setY(players[i].getY() + projectiles[j].getVelocityY()*0.3);
 						players[i].setHealth(players[i].getHealth() - 1);
 					}
 					checkDeath(players[i], projectiles[j]);

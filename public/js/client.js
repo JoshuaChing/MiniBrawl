@@ -24,7 +24,12 @@ var socketio,
 	setCharacter = "BlackNinja",
 	iconSelected = 0,
 	blocks =[],
-	chatDisabled = null;
+	chatDisabled = null,
+	firstMarkFrame = 1;
+	firstMarkFrameDirection = 1;
+	firstMarkFrameMax = 5;
+	firstMarkFrameDelayMax = 5;
+	firstMarkFrameDelay = 0;
 
 
 /********************************/
@@ -133,8 +138,8 @@ function localPlayerMovement(){
 	var checkMovement = false;
 
 	if(chatDisabled){
-		//up key (w) and key (up)
-		if (keys[87] || keys[38]){
+		//up key (w) and key (up) and key (space)
+		if (keys[87] || keys[38] || keys[32]){
 			socket.emit("upKeyToServer");
 		}
 
@@ -197,6 +202,32 @@ function drawPlayers(){
 		ctx.rect(players[i].x - 2, players[i].y - 9, healthRatio*28, 5);
 		ctx.fill();
 		ctx.closePath();
+	}
+
+	//draw winner's triangle
+	if(playersRanking != null && playersRanking.length > 0){
+		if(firstMarkFrameDelay < firstMarkFrameDelayMax){
+			firstMarkFrameDelay++;
+		}else{
+			//animate frame
+			if(firstMarkFrame >= firstMarkFrameMax || firstMarkFrame <= 0){
+				firstMarkFrameDirection *= -1;
+			}
+			firstMarkFrame += firstMarkFrameDirection;
+			firstMarkFrameDelay = 0;
+		}
+		//draw path (player widths 12.5)
+		ctx.beginPath();
+		ctx.moveTo(playersRanking[0].x + 13, playersRanking[0].y - 19 + firstMarkFrame);
+		ctx.lineTo(playersRanking[0].x + 8, playersRanking[0].y - 25 + firstMarkFrame);
+		ctx.lineTo(playersRanking[0].x + 18, playersRanking[0].y - 25 + firstMarkFrame);
+		ctx.closePath();
+		//border and fill
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#000000";
+		ctx.stroke();
+		ctx.fillStyle = "#FFCC00";
+		ctx.fill();
 	}
 }
 
