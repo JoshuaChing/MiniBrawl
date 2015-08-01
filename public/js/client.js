@@ -216,6 +216,10 @@ function drawPlayers(){
 			firstMarkFrame += firstMarkFrameDirection;
 			firstMarkFrameDelay = 0;
 		}
+		//draw text
+		ctx.font = "Bold 10px Verdana";
+		ctx.fillStyle = "#000000";
+		ctx.fillText("1st", playersRanking[0].x + 3, playersRanking[0].y - 30 + firstMarkFrame);
 		//draw path (player widths 12.5)
 		ctx.beginPath();
 		ctx.moveTo(playersRanking[0].x + 13, playersRanking[0].y - 19 + firstMarkFrame);
@@ -226,7 +230,7 @@ function drawPlayers(){
 		ctx.lineWidth = 2;
 		ctx.strokeStyle = "#000000";
 		ctx.stroke();
-		ctx.fillStyle = "#FFCC00";
+		ctx.fillStyle = "red";
 		ctx.fill();
 	}
 }
@@ -257,7 +261,7 @@ function drawProjectiles(){
 			default:
 				ctx.fillStyle="black";
 		}
-		ctx.rect(projectiles[i].x,projectiles[i].y,5,5);
+		ctx.arc(projectiles[i].x, projectiles[i].y, 5/2, 0, 2 * Math.PI);
 		ctx.fill();
 		ctx.closePath();
 	}
