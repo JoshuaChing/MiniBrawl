@@ -268,11 +268,25 @@ function drawProjectiles(){
 /* DRAW GAME MAP                */
 /********************************/
 function drawMap(){
-	ctx.fillStyle="#595959";
+	//draw base blocks
+	ctx.fillStyle="#4d341e";
 	ctx.beginPath();
 	for (var i=0; i<blocks.length;i++){
 		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,blocks[i].height);
 	}
+	ctx.closePath();
+	ctx.fill();
+	//draw grass
+	ctx.fillStyle="#003300";
+	ctx.beginPath();
+	for (var i=0; i<5;i++){
+		ctx.rect(blocks[i].x,blocks[i].y,blocks[i].width,5);
+	}
+	//too lazy to find pattern
+	ctx.rect(blocks[5].x + 20,blocks[5].y,blocks[5].width - 20,5);
+	ctx.rect(blocks[6].x + 60,blocks[6].y,blocks[6].width - 60,5);
+	ctx.rect(blocks[7].x + 100,blocks[7].y,blocks[7].width - 100,5);
+	ctx.rect(blocks[8].x ,blocks[8].y,blocks[8].width, 5);
 	ctx.closePath();
 	ctx.fill();
 }
