@@ -1,10 +1,24 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+    <title>Mini Brawl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!--GOOGLE FONTS-->
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato|Raleway">
 </head>
 
 <body>
+    <div id="header">
+        <nav style="left:0; padding-left:10px">
+            <ul>
+                <li>
+                    <!--<span style="color:#fff;font-size:14px">Developed by:&nbsp;</span>-->
+                    <a href="http://joshuaching.github.io">joshuaching.me</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
     <div id="gameContainer">
         <canvas id="canvas"></canvas>
         <div id="playersList">
@@ -38,12 +52,14 @@
             </div>
     </div>
 
-    <span style="color:#3498db;text-align:center;display:block;clear:both;">
+    <span style="color:#217dbb;text-align:center;display:block;clear:both;">
         <br>
         <span style="text-decoration: underline">INSTRUCTIONS</span> <br>
         arrow keys or w,a,d to move around <br>
         click to shoot projectiles
     </span>
+    </br></br>
+    <p style="color:#217dbb;text-align:center;display:block;clear:both;font-size:18px;">&#169; Joshua Ching 2015</p>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/Player.js"></script>

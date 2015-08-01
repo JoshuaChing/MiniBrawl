@@ -1,6 +1,119 @@
 html{
-	font-family:verdana;
+	font-family:'Lato',Verdana;
 	background-color:#000000;
+	min-width:900px;
+}
+
+body{
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+}
+
+/*HEADER NAV*/
+#header{
+	background-color:#217dbb;
+	height:34px;
+	width:100%;
+	position:fixed;
+	top:0%;
+	left:0%;
+	z-index: 1;
+	margin:0;
+	padding:0;
+	opacity: 1.0;
+	-webkit-transition: all 0.3s ease-out;  /* Saf3.2+, Chrome */
+     -moz-transition: all 0.3s ease-out;  /* FF4+ */
+      -ms-transition: all 0.3s ease-out;  /* IE10 */
+       -o-transition: all 0.3s ease-out;  /* Opera 10.5+ */
+          transition: all 0.3s ease-out;
+}
+
+#header:hover{
+	opacity: 1.0;
+	-webkit-transition: all 0.3s ease-out;  /* Saf3.2+, Chrome */
+     -moz-transition: all 0.3s ease-out;  /* FF4+ */
+      -ms-transition: all 0.3s ease-out;  /* IE10 */
+       -o-transition: all 0.3s ease-out;  /* Opera 10.5+ */
+          transition: all 0.3s ease-out;
+}
+
+/*main nav*/
+nav{
+	position:fixed;
+	top:0%;
+	right:0%;
+	z-index: 2;
+}
+
+nav ul{
+	margin:0;
+	padding:0;
+}
+
+/*all list items*/
+nav ul li{
+	position:relative;
+	width:230px;
+	float:left;
+	list-style: none;
+	padding-top:5px;
+	padding-bottom:5px
+}
+
+/*all list item links*/
+nav ul li a{
+	text-decoration:none;
+	font-size: 14px;
+	color:#FFF;
+	border-bottom: 1px solid rgba(255,255,255,0);
+	-webkit-transition: all 0.3s ease-out;  /* Saf3.2+, Chrome */
+     -moz-transition: all 0.3s ease-out;  /* FF4+ */
+      -ms-transition: all 0.3s ease-out;  /* IE10 */
+       -o-transition: all 0.3s ease-out;  /* Opera 10.5+ */
+          transition: all 0.3s ease-out;
+}
+
+/*all list item links hover*/
+nav ul li a:hover{
+	border-color:#FFF;
+}
+
+/*hide child items*/
+nav li ul{
+	position:absolute;
+	visibility:hidden;
+    opacity:0;
+	padding-top:5px;
+	-webkit-transition: all 0.3s ease-out;  /* Saf3.2+, Chrome */
+     -moz-transition: all 0.3s ease-out;  /* FF4+ */
+      -ms-transition: all 0.3s ease-out;  /* IE10 */
+       -o-transition: all 0.3s ease-out;  /* Opera 10.5+ */
+          transition: all 0.3s ease-out;
+}
+
+/*display child item when hovered*/
+nav li:hover ul{
+	visibility:visible;
+	opacity:1;
+	transition-delay:0s;
+}
+
+/*child item link style*/
+nav ul li ul li a{
+	color:#000000;
+	border-bottom: 1px solid rgba(127,140,141,0);
+	-webkit-transition: all 0.3s ease-out;  /* Saf3.2+, Chrome */
+     -moz-transition: all 0.3s ease-out;  /* FF4+ */
+      -ms-transition: all 0.3s ease-out;  /* IE10 */
+       -o-transition: all 0.3s ease-out;  /* Opera 10.5+ */
+          transition: all 0.3s ease-out;
+}
+
+/*child item links style hover*/
+nav ul li ul li a:hover{
+	color:#000000;
+	border-color:#000000;
 }
 
 /*GAME VIEW*/
@@ -18,6 +131,7 @@ canvas{
 #gameContainer{
 	width:843px;
 	margin:0 auto;
+	margin-top:60px;
 }
 
 #playersList-title{
