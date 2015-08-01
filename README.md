@@ -13,6 +13,6 @@ The game can be found here:
 https://minibrawl.herokuapp.com
 
 Screenshot:
-![](https://raw.githubusercontent.com/JoshuaChing/MiniBrawl/master/screenshots/screenshot2.png)
+![](https://raw.githubusercontent.com/JoshuaChing/MiniBrawl/master/screenshots/screenshot3.png)
 
 Enjoy!
